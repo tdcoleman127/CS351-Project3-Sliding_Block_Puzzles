@@ -17,9 +17,21 @@ class Piece:
         self.moves = moves    # type of allowed movement
 
     def pieceDetails(self):
+        canMove = ""
+        if(self.moves == 'h'):
+            canMove = "horizontal"
+        elif(self.moves == 'v'):
+            canMove = "vertical"
+        elif(self.moves == 'b'):
+            canMove = "horizontal and vertical"
+        elif(self.moves == 'n'):
+            canMove = "no"
+        else:
+            canMove = "unspecified"
         print("Piece " + self.name +
               " at row " + str(self.rowPos) + " and col " + str(self.colPos)
-              + " with width " + str(self.width) + " and height " + str(self.height))
+              + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions")
+        pass
         
 class Movement:
     def __init__ (self):
@@ -36,7 +48,7 @@ class Grid:
         
 def slidingBlock(filename):
 
-    details = ['3', '2', '1', '1', 'd']
+    details = ['3', '2', '1', '1', 'h']
 
     myPiece = Piece('Z', int(details[0]), int(details[1]), int(details[2]),
           int(details[3]), details[4])
