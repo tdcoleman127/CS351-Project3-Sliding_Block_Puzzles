@@ -16,7 +16,8 @@ class Piece:
         self.height = height     # height in rows
         self.moves = moves    # type of allowed movement
 
-    def pieceDetails(self):
+    # Created toString()-like method for Piece
+    def __str__(self):
         canMove = ""
         if(self.moves == 'h'):
             canMove = "horizontal"
@@ -28,10 +29,7 @@ class Piece:
             canMove = "no"
         else:
             canMove = "unspecified"
-        print("Piece " + self.name +
-              " at row " + str(self.rowPos) + " and col " + str(self.colPos)
-              + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions")
-        pass
+        return "Piece " + self.name + " at row " + str(self.rowPos) + " and col " + str(self.colPos) + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions"
         
 class Movement:
     def __init__ (self):
@@ -42,6 +40,8 @@ class Movement:
 class Grid:
     def __init__ (self):
         self.pieces = []    # list of all pieces
+        # self.rowLimit = 0
+        # self.colLimit = 0
 
 
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
@@ -54,9 +54,8 @@ def slidingBlock(filename):
           int(details[3]), details[4])
     piece2 = Piece()
     
-    print(myPiece.pieceDetails())
-    print(piece2.pieceDetails())
-
+    print(myPiece)
+    print(piece2)
 
     print ("Sliding Block Puzzle Solver")
     print ("using data in file:", filename)
