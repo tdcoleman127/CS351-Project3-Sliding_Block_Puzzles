@@ -38,17 +38,27 @@ class Movement:
         self.distance = 0
 
 class Grid:
-    def __init__ (self):
+    def __init__ (self, rowLimit=0, colLimit=0):
         self.pieces = []    # list of all pieces
-        # self.rowLimit = 0
-        # self.colLimit = 0
+        self.rowLimit = rowLimit
+        self.colLimit = colLimit
 
+    def __str__(self):
+        return "This grid consists of " + str(len(self.pieces)) + " across " + self.rowLimit + "rows and " + self.colLimit + "columns"
 
+    def pieceNames(self):
+        pass
+    
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
         
 def slidingBlock(filename):
+    # 4  4
+    text = "3  1  2  1  b"
+    # 1  1  1  1  b
 
-    details = ['3', '2', '1', '1', 'h']
+    details = text.split()
+    # details2 = ['3', '2', '1', '1', 'h']
+    # details3 = ['3', '2', '1', '1', 'h']
 
     myPiece = Piece('Z', int(details[0]), int(details[1]), int(details[2]),
           int(details[3]), details[4])
@@ -57,8 +67,31 @@ def slidingBlock(filename):
     print(myPiece)
     print(piece2)
 
+    # Piece name can be checked
+    if(myPiece.name == 'Z'):
+        print("ROCK THE DRAGON")
+
     print ("Sliding Block Puzzle Solver")
     print ("using data in file:", filename)
+
+    # Logic for inserting pieces into the grid from file input
+    myGrid = None
+    myPiece = None
+    for line in file:
+        details = line.split()
+        if len(details) == 2:
+            myGrid = Grid(details[0], details[1])
+            print("Error: Number of rows must be greater than zero")
+            print("Error: Number of columns must be greater than zero")
+        else:
+
+            if(details[0] > myGrid.rowLimit or details[1] > myGrid.colLimit):
+                # Handle piece falling outside of grid
+                print("Warning: Piece with starting position of R,C falls outside of grid")
+            myPiece = Piece('Z', int(details[0]), int(details[1]), int(details[2]),
+          int(details[3]), details[4])
+            # Add this piece to the Grid
+            Grid.pieces.append(myPiece)
     pass
 
 
