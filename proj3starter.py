@@ -58,6 +58,22 @@ class Grid:
                 return True
         return False
     
+    def gridState(self):
+        matrix = []
+
+        stateStr = '* ' * self.rowLimit
+        stateStr = stateStr.split()
+        # print(stateStr)
+        for _ in range(self.colLimit):
+            matrix.append(stateStr)
+
+        for p in self.pieces:
+            matrix[p.rowPos - 1][p.colPos - 1] = p.name
+
+        print(matrix)
+
+        pass
+    
 def hasValidMovement(m) -> bool:
     return (m == 'h') or (m == 'v') or (m == 'b') or (m == 'n')
     
@@ -156,13 +172,14 @@ def slidingBlock(filename):
     # Print grid results and names of all pieces
     print(myGrid)
     print(myGrid.allPieces())
+    print(myGrid.gridState())
 
     file.close()
 
 
 slidingBlock ("proj3a.txt")
-slidingBlock ("proj3b.txt")
-slidingBlock ("proj3k.txt")
+# slidingBlock ("proj3b.txt")
+# slidingBlock ("proj3k.txt")
 # slidingBlock ("proj3a.data")
     
 
