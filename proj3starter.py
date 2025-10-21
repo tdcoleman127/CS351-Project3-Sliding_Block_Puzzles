@@ -30,7 +30,8 @@ class Piece:
         else:
             canMove = "unspecified"
         return "Piece " + self.name + " at row " + str(self.rowPos) + " and col " + str(self.colPos) + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions"
-        
+    
+    
 class Movement:
     def __init__ (self):
         self.piece = None
@@ -44,9 +45,9 @@ class Grid:
         self.colLimit = colLimit
 
     def __str__(self):
-        return "This grid consists of " + str(len(self.pieces)) + " pieces across " + str(self.rowLimit) + " rows and " + str(self.colLimit) + " columns"
+        return "The grid consists of " + str(len(self.pieces)) + " pieces across " + str(self.rowLimit) + " rows and " + str(self.colLimit) + " columns"
 
-    def pieceNames(self):
+    def allPieces(self):
         print("Pieces in this grid:")
         for p in self.pieces:
             print(p)
@@ -56,22 +57,25 @@ class Grid:
             if(r == p.rowPos and c == p.colPos):
                 return True
         return False
-        
+    
+def hasValidMovement(m) -> bool:
+    return (m == 'h') or (m == 'v') or (m == 'b') or (m == 'n')
     
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
         
 def slidingBlock(filename):
     # 4  4
-    # text = "3  1  2  1  b"
+    text = "3  1  2  1  b"
     # # 1  1  1  1  b
 
-    # details = text.split()
-    # # details2 = ['3', '2', '1', '1', 'h']
-    # # details3 = ['3', '2', '1', '1', 'h']
+    details = text.split()
+    # details2 = ['3', '2', '1', '1', 'h']
+    # details3 = ['3', '2', '1', '1', 'h']
 
-    # testPiece = Piece('Z', int(details[0]), int(details[1]), int(details[2]),
-    #       int(details[3]), details[4])
-    # blankPiece = Piece()
+    testPiece = Piece('Z', int(details[0]), int(details[1]), int(details[2]),
+          int(details[3]), details[4])
+    blankPiece = Piece()
+    # print(hasValidMovement(details[4]))
     
     # # print(testPiece)
     # # print(blankPiece)
@@ -85,61 +89,80 @@ def slidingBlock(filename):
     # print(testGrid.pieceOverlapping(0, 0))
     # print(testGrid.pieceOverlapping(0, 4))
 
-
-    # # Piece name can be checked
-    # if(testPiece.name == 'Z'):
-    #     print("ROCK THE DRAGON")
-
     print ("Sliding Block Puzzle Solver")
     print ("using data in file:", filename)
 
+    # Opening file
+    if not filename:
+        print("Empty filename.")
+        return False
+    try:
+        file = open(filename, 'r')
+    except (FileNotFoundError, IOError):
+        print("Error occurred opening file")
+        return False
+    
     # Logic for inserting pieces into the grid from file input
 
     # Intializing puzzle grid and each piece before its inserted
     myGrid = Grid()
     myPiece = Piece()
 
+    # details2 = ["5  5", "3  1  2  1  b", "4  3  1  1  b", "1  1  2  1  b", "3  1  2  1  b",
+    #             "0  1  2  1  b", "-1  -83  2  1  b", "0  7  2  1  b", "5  5  2  1  k"]
+
+    # Initializing variables for later use
+    nameIter = 0
+    possibleNames = "Z 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y"
+    possibleNames = possibleNames.split()
+
+
     # Reading in each line in file
-    details2 = ["5  5", "3  1  2  1  b", "4  3  1  1  b", "1  1  2  1  b", "3  1  2  1  b",
-                "0  1  2  1  b", "-1  -83  2  1  b", "0  7  2  1  b"]
-    for item in details2:
-        gameInput = item.split()
-        if len(gameInput) == 2:
-            if(int(gameInput[0]) <= 0):
+    for item in file:
+        puzzleInput = item.split()
+        if len(puzzleInput) == 2:
+            # Checking that input rows and columns are positive integers
+            if(int(puzzleInput[0]) <= 0):
                 print("Error: Number of rows must be greater than zero")
                 return
-            elif(int(gameInput[1]) <= 0):
+            elif(int(puzzleInput[1]) <= 0):
                 print("Error: Number of columns must be greater than zero")
                 return
             else:
-                myGrid.rowLimit = int(gameInput[0])
-                myGrid.colLimit = int(gameInput[1])
+                # Initializing Grid with them if they're valid
+                myGrid.rowLimit = int(puzzleInput[0])
+                myGrid.colLimit = int(puzzleInput[1])
         else:
-
-            if(int(gameInput[0]) > myGrid.rowLimit or int(gameInput[1]) > myGrid.colLimit
-               or int(gameInput[0]) <= 0 or int(gameInput[1]) <= 0):
+            if(int(puzzleInput[0]) > myGrid.rowLimit or int(puzzleInput[1]) > myGrid.colLimit
+               or int(puzzleInput[0]) <= 0 or int(puzzleInput[1]) <= 0):
                 # Handle piece falling outside of grid
                 print("Warning: Piece with starting position of R,C falls outside of grid")
-
-            elif( myGrid.pieceOverlapping(int(gameInput[0]), int(gameInput[1])) == True ):
+            elif( myGrid.pieceOverlapping(int(puzzleInput[0]), int(puzzleInput[1])) == True ):
                 # Piece overlaps with a created piece 
                 print("Warning: Piece with starting position of R,C overlaps with other piece")
-
+            elif( hasValidMovement(puzzleInput[4]) == False):
+                # Handle invalid direction of movement
+                print("Warning: Piece with starting position of R,C has invalid movement")
             else:
                 # Average case: Add this piece to the Grid
-                myPiece = Piece('Z', int(gameInput[0]), int(gameInput[1]), int(gameInput[2]), 
-                                int(gameInput[3]), gameInput[4])
-                myGrid.pieces.append(myPiece)
+                if(nameIter > 61):
+                    print("Warning: Piece limit reached - 61")
+                else:
+                    myPiece = Piece(possibleNames[nameIter], int(puzzleInput[0]), int(puzzleInput[1]), int(puzzleInput[2]), 
+                                int(puzzleInput[3]), puzzleInput[4])                
+                    myGrid.pieces.append(myPiece)
+                    nameIter = nameIter + 1
 
-            # elif():
-            #     # Handle invalid direction of movement
-            #     print("Warning: Piece with starting position of R,C has invalid movement")
+    # Print grid results and names of all pieces
     print(myGrid)
-    print(myGrid.pieceNames())
+    print(myGrid.allPieces())
 
-    pass
+    file.close()
 
 
-slidingBlock ("proj3a.data")
+slidingBlock ("proj3a.txt")
+slidingBlock ("proj3b.txt")
+slidingBlock ("proj3k.txt")
+# slidingBlock ("proj3a.data")
     
 
