@@ -126,30 +126,28 @@ class Grid:
 
         
         # Need to format actual output in segments below
-        # print("Matrix as array: after adding elements")
-        # print(matrix)
+
+        # To print the grid as a line (maybe put into another function)
         lineString = ""
         for m in matrix:
-            # m.insert(0, '+')
-            # m.append('+')
             lineString += ''.join(m)
-        print(lineString)
         lineString = lineString.replace("*", ' ')
+        print("Line output:")
         print(lineString)
 
 
-
-        
-            # m.insert(len(finishString) - 1, '*')
-        
-        # for let in finishString:
-        #     print(let)
-
-        # for(matrix)
-        # rowStars = '*' * (self.rowLimit+ 2)
-
-        # print(rowStars)
-        # print(rowStars)
+        # To print the grid, as is, with asterisk borders (maybe put into another function)
+        for m in matrix:
+            m.insert(0, '*')
+            m.append('*')
+        rowStars = ['*' for _ in range(self.colLimit + 2)]
+        matrix.insert(0, rowStars)
+        matrix.append(rowStars)
+        lineString2 = ""
+        for d in matrix:
+            lineString2 += ''.join(d) + "\n"
+        print("Grid output:")
+        print(lineString2)
 
     
 def hasValidMovement(m) -> bool:
@@ -256,14 +254,22 @@ def slidingBlock(filename):
 
     file.close()
 
-
 slidingBlock ("proj3a.txt")
-# slidingBlock ("proj3b.txt")
-# slidingBlock ("proj3c.txt")
-# slidingBlock ("proj3d.txt")
-# slidingBlock ("proj3e.txt")
-# slidingBlock ("proj3b.txt")
-# slidingBlock ("proj3k.txt")
+slidingBlock ("proj3b.txt")
+slidingBlock ("proj3c.txt")
+slidingBlock ("proj3d.txt")
+slidingBlock ("proj3e.txt")
+
+slidingBlock ("proj3f.txt")
+slidingBlock ("proj3g.txt")
+slidingBlock ("proj3h.txt")
+slidingBlock ("proj3i.txt")
+slidingBlock ("proj3j.txt")
+slidingBlock ("proj3k.txt")
+
+slidingBlock ("proj3l.txt")
+slidingBlock ("proj3m.txt")
+slidingBlock ("proj3n.txt")
 # slidingBlock ("proj3a.data")
     
 
