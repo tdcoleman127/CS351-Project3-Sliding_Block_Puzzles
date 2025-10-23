@@ -41,7 +41,9 @@ class Movement:
         self.direction = "u"
         self.distance = 0
 
-    # Could use Movement class to edit the grid
+    # Could use Movement class to manage piece movement and restructuring of Grid pieces
+    # Remember: No pieces get removed, only moved out and replaced
+    # Make sure to replace former locations in Grid with *
 
 class Grid:
     def __init__ (self, rowLimit=0, colLimit=0):
@@ -64,26 +66,15 @@ class Grid:
         return False
     
     def gridState(self):
-        # starRows = ['*'] * 5
-        # matrix = starRows * 5
-        # print(matrix)
-
-        # Note: Works perfectly with numpy
-
         print("Matrix as array: no elements added")
         matrix = [['*' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
-        # for m in matrix:
-        #     print(m)
 
         for p in self.pieces:
-            # print(p.rowPos)
-            # print(p.colPos)
             matrix[p.rowPos - 1][p.colPos - 1] = p.name
             
             # Handling width
             if(p.width > 1):
                 print("Piece " + p.name + "'s width is " + str(p.width))
-                # If the one next to it is a star or it's still on the board
                 originalColumn = p.colPos - 1
                 left = p.colPos - 2
                 right = p.colPos
@@ -105,9 +96,9 @@ class Grid:
                 print(str(widthIter))
                 print("Ending width is 0 " + str(widthIter == 0))
 
+            # Handling height
             if(p.height > 1):
                 print("Piece " + p.name + "'s height is " + str(p.height))
-                # If the one next to it is a star or it's still on the board
                 originalRow = p.rowPos - 1
                 up = p.rowPos - 2
                 down = p.rowPos
@@ -122,7 +113,7 @@ class Grid:
                     print("heightIter during down", str(heightIter))
 
                 if(widthIter > 0):
-                    print("Still need to do widthIter for up")
+                    print("Still need to do heightIter for up")
                     while( (up > 0) and (matrix[up][p.colPos - 1]) and (heightIter > 0)):
                         matrix[up][p.colPos - 1] = p.name
                         up = up - 1
@@ -131,44 +122,14 @@ class Grid:
                 print(str(heightIter))
                 print("Ending height is 0 " + str(heightIter == 0))
 
-                    
-
-
-
-
-                # Part 1: Unless you hit a wall or another piece
-                # Add a piece to the right, and to the right of that one, etc.
-
-                # Part 2
-                # Restore original width from before
-
-                # Part 3: Confirm here width Demo is 0, meaning all pieces were added to fill with, right then left
-                # print("Ending width to fill" + str(widthDemo))
-
-            # for p in self.objects:
-            #     2DArr[p.rowPos - 1][p.colPos - 1] = p.pStr
-            #     print(p.pStr)
         
+        # Need to format actual output in segments below
         print("Matrix as array: after adding elements")
         print(matrix)
-
         finishString = ""
         for m in matrix:
             finishString += ''.join(m) + "\n"
-            # print(len(matrix))
         print(finishString)
-
-        # print("Length of finish string")
-        # print(len(finishString))
-        # stateStr = '* ' * self.rowLimit
-        # stateStr = stateStr.split()
-        # # print(stateStr)
-        # for _ in range(self.colLimit):
-        #     matrix.append(stateStr)
-        #     print(stateStr)
-
-        # for p in self.pieces:
-        #     matrix[p.rowPos - 1][p.colPos - 1] = p.name
 
     
 def hasValidMovement(m) -> bool:
