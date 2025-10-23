@@ -105,29 +105,31 @@ class Grid:
                 print(str(widthIter))
                 print("Ending width is 0 " + str(widthIter == 0))
 
-            # if(p.height > 1):
-            #     print("Piece " + p.name + "'s height is " + str(p.height))
-            #     # If the one next to it is a star or it's still on the board
-            #     originalColumn = p.colPos - 1
-            #     left = p.colPos - 2
-            #     right = p.colPos
-            #     widthIter = p.width - 1
-            #     print("Starting width is " + str(widthIter))
-            #     while( (right < self.colLimit) and (matrix[p.rowPos - 1][right] == '*') and (widthIter > 0)):
-            #         matrix[p.rowPos - 1][right] = p.name
-            #         right = right + 1
-            #         widthIter = widthIter - 1
-            #         print("widthIter during right", str(widthIter))
+            if(p.height > 1):
+                print("Piece " + p.name + "'s height is " + str(p.height))
+                # If the one next to it is a star or it's still on the board
+                originalRow = p.rowPos - 1
+                up = p.rowPos - 2
+                down = p.rowPos
+                heightIter = p.height - 1
+                print("Starting height is " + str(heightIter))
 
-            #     if(widthIter > 0):
-            #         print("Still need to do widthIter for left")
-            #         while( (left > 0) and (matrix[p.rowPos - 1][left] == '*') and (widthIter > 0)):
-            #             matrix[p.rowPos - 1][left] = p.name
-            #             left = left - 1
-            #             widthIter = widthIter - 1
-            #             print("widthIter during left", str(widthIter))
-            #     print(str(widthIter))
-            #     print("Ending width is 0 " + str(widthIter == 0))
+
+                while( (down < self.rowLimit) and (matrix[down][p.colPos - 1] == '*') and (heightIter > 0)):
+                    matrix[down][p.colPos - 1] = p.name
+                    down = down + 1
+                    heightIter = heightIter - 1
+                    print("heightIter during down", str(heightIter))
+
+                if(widthIter > 0):
+                    print("Still need to do widthIter for up")
+                    while( (up > 0) and (matrix[up][p.colPos - 1]) and (heightIter > 0)):
+                        matrix[up][p.colPos - 1] = p.name
+                        up = up - 1
+                        heightIter = heightIter - 1
+                        print("heightIter during up", str(heightIter))
+                print(str(heightIter))
+                print("Ending height is 0 " + str(heightIter == 0))
 
                     
 
@@ -274,7 +276,7 @@ def slidingBlock(filename):
     file.close()
 
 
-slidingBlock ("proj3b.txt")
+slidingBlock ("proj3f.txt")
 # slidingBlock ("proj3b.txt")
 # slidingBlock ("proj3k.txt")
 # slidingBlock ("proj3a.data")
