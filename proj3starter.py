@@ -66,70 +66,90 @@ class Grid:
         return False
     
     def gridState(self):
-        print("Matrix as array: no elements added")
+        # print("Matrix as array: no elements added")
         matrix = [['*' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
 
         for p in self.pieces:
             matrix[p.rowPos - 1][p.colPos - 1] = p.name
+            # print(p.rowPos)
+            # print(p.colPos)
             
             # Handling width
             if(p.width > 1):
-                print("Piece " + p.name + "'s width is " + str(p.width))
+                # print("Piece " + p.name + "'s width is " + str(p.width))
                 originalColumn = p.colPos - 1
                 left = p.colPos - 2
                 right = p.colPos
                 widthIter = p.width - 1
-                print("Starting width is " + str(widthIter))
+                # print("Starting width is " + str(widthIter))
                 while( (right < self.colLimit) and (matrix[p.rowPos - 1][right] == '*') and (widthIter > 0)):
                     matrix[p.rowPos - 1][right] = p.name
                     right = right + 1
                     widthIter = widthIter - 1
-                    print("widthIter during right", str(widthIter))
+                    # print("widthIter during right", str(widthIter))
 
                 if(widthIter > 0):
-                    print("Still need to do widthIter for left")
-                    while( (left > 0) and (matrix[p.rowPos - 1][left] == '*') and (widthIter > 0)):
+                    # print("Still need to do widthIter for left")
+                    while( (left >= 0) and (matrix[p.rowPos - 1][left] == '*') and (widthIter > 0)):
                         matrix[p.rowPos - 1][left] = p.name
                         left = left - 1
                         widthIter = widthIter - 1
-                        print("widthIter during left", str(widthIter))
-                print(str(widthIter))
-                print("Ending width is 0 " + str(widthIter == 0))
+                        # print("widthIter during left", str(widthIter))
+                # print(str(widthIter))
+                # print("Ending width is 0 " + str(widthIter == 0))
 
             # Handling height
             if(p.height > 1):
-                print("Piece " + p.name + "'s height is " + str(p.height))
+                # print("Piece " + p.name + "'s height is " + str(p.height))
                 originalRow = p.rowPos - 1
                 up = p.rowPos - 2
                 down = p.rowPos
                 heightIter = p.height - 1
-                print("Starting height is " + str(heightIter))
+                # print("Starting height is " + str(heightIter))
 
 
                 while( (down < self.rowLimit) and (matrix[down][p.colPos - 1] == '*') and (heightIter > 0)):
                     matrix[down][p.colPos - 1] = p.name
                     down = down + 1
                     heightIter = heightIter - 1
-                    print("heightIter during down", str(heightIter))
+                    # print("heightIter during down", str(heightIter))
 
                 if(widthIter > 0):
-                    print("Still need to do heightIter for up")
-                    while( (up > 0) and (matrix[up][p.colPos - 1]) and (heightIter > 0)):
+                    # print("Still need to do heightIter for up")
+                    while( (up >= 0) and (matrix[up][p.colPos - 1]) and (heightIter > 0)):
                         matrix[up][p.colPos - 1] = p.name
                         up = up - 1
                         heightIter = heightIter - 1
-                        print("heightIter during up", str(heightIter))
-                print(str(heightIter))
-                print("Ending height is 0 " + str(heightIter == 0))
+                #         print("heightIter during up", str(heightIter))
+                # print(str(heightIter))
+                # print("Ending height is 0 " + str(heightIter == 0))
 
         
         # Need to format actual output in segments below
-        print("Matrix as array: after adding elements")
-        print(matrix)
-        finishString = ""
+        # print("Matrix as array: after adding elements")
+        # print(matrix)
+        lineString = ""
         for m in matrix:
-            finishString += ''.join(m) + "\n"
-        print(finishString)
+            # m.insert(0, '+')
+            # m.append('+')
+            lineString += ''.join(m)
+        print(lineString)
+        lineString = lineString.replace("*", ' ')
+        print(lineString)
+
+
+
+        
+            # m.insert(len(finishString) - 1, '*')
+        
+        # for let in finishString:
+        #     print(let)
+
+        # for(matrix)
+        # rowStars = '*' * (self.rowLimit+ 2)
+
+        # print(rowStars)
+        # print(rowStars)
 
     
 def hasValidMovement(m) -> bool:
@@ -228,8 +248,8 @@ def slidingBlock(filename):
                     nameIter = nameIter + 1
 
     # Print grid results and names of all pieces
-    print(myGrid)
-    print(myGrid.allPieces())
+    # print(myGrid)
+    # print(myGrid.allPieces())
     print(myGrid.gridState())
 
     # Insert BFS Logic here after input from file to grid is fully tested
@@ -237,7 +257,11 @@ def slidingBlock(filename):
     file.close()
 
 
-slidingBlock ("proj3f.txt")
+slidingBlock ("proj3a.txt")
+# slidingBlock ("proj3b.txt")
+# slidingBlock ("proj3c.txt")
+# slidingBlock ("proj3d.txt")
+# slidingBlock ("proj3e.txt")
 # slidingBlock ("proj3b.txt")
 # slidingBlock ("proj3k.txt")
 # slidingBlock ("proj3a.data")
