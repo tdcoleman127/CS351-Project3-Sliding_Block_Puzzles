@@ -7,6 +7,9 @@ Created on Fri Oct 10 12:44:15 2025
 Starter code for CS 351 F25 Project 3
  - Sliding Block Puzzles
 """
+
+import numpy as np
+
 class Piece:
     def __init__ (self, name="", rowPos=0, colPos=0, width=0, height=0, moves="n"):
         self.name = name     # name of piece
@@ -38,6 +41,8 @@ class Movement:
         self.direction = "u"
         self.distance = 0
 
+    # Could use Movement class to edit the grid
+
 class Grid:
     def __init__ (self, rowLimit=0, colLimit=0):
         self.pieces = []    # list of all pieces
@@ -59,20 +64,63 @@ class Grid:
         return False
     
     def gridState(self):
-        matrix = []
+        # starRows = ['*'] * 5
+        # matrix = starRows * 5
+        # print(matrix)
 
-        stateStr = '* ' * self.rowLimit
-        stateStr = stateStr.split()
-        # print(stateStr)
-        for _ in range(self.colLimit):
-            matrix.append(stateStr)
+        # Note: Works perfectly with numpy
+
+        print("Matrix as array: no elements added")
+        matrix = [['*' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
+        # for m in matrix:
+        #     print(m)
 
         for p in self.pieces:
+            # print(p.rowPos)
+            # print(p.colPos)
             matrix[p.rowPos - 1][p.colPos - 1] = p.name
+            if(p.width == 2):
+                print("Piece " + p.name + "'s width is " + str(p.width))
+                # If the one next to it is a star or it's still on the board
+                widthColumn = p.colPos - 1
+                
+                # Try to place element to right
+                if((widthColumn + 1) <= self.colLimit):
+                    if(matrix[p.rowPos - 1][widthColumn + 1] == '*'):
+                        print((matrix[p.rowPos - 1][widthColumn + 1] == '*') is True)
+                        matrix[p.rowPos - 1][widthColumn + 1] = p.name
+                else:
+                    # Trying for left
+                    if((widthColumn - 1) >= self.colLimit):
+                        if(matrix[p.rowPos - 1][widthColumn - 1] == '*'):
+                            matrix[p.rowPos - 1][widthColumn - 1] = p.name
+                    
 
+            # for p in self.objects:
+            #     2DArr[p.rowPos - 1][p.colPos - 1] = p.pStr
+            #     print(p.pStr)
+        
+        print("Matrix as array: after adding elements")
         print(matrix)
 
-        pass
+        finishString = ""
+        for m in matrix:
+            finishString += ''.join(m) + "\n"
+            # print(len(matrix))
+        print(finishString)
+
+        # print("Length of finish string")
+        # print(len(finishString))
+        # stateStr = '* ' * self.rowLimit
+        # stateStr = stateStr.split()
+        # # print(stateStr)
+        # for _ in range(self.colLimit):
+        #     matrix.append(stateStr)
+        #     print(stateStr)
+
+        # for p in self.pieces:
+        #     matrix[p.rowPos - 1][p.colPos - 1] = p.name
+
     
 def hasValidMovement(m) -> bool:
     return (m == 'h') or (m == 'v') or (m == 'b') or (m == 'n')
@@ -174,10 +222,13 @@ def slidingBlock(filename):
     print(myGrid.allPieces())
     print(myGrid.gridState())
 
+
+    # Insert BFS Logic here after input from file to grid is fully tested
+
     file.close()
 
 
-slidingBlock ("proj3a.txt")
+slidingBlock ("proj3k.txt")
 # slidingBlock ("proj3b.txt")
 # slidingBlock ("proj3k.txt")
 # slidingBlock ("proj3a.data")
