@@ -79,22 +79,69 @@ class Grid:
             # print(p.rowPos)
             # print(p.colPos)
             matrix[p.rowPos - 1][p.colPos - 1] = p.name
-            if(p.width == 2):
+            
+            # Handling width
+            if(p.width > 1):
                 print("Piece " + p.name + "'s width is " + str(p.width))
                 # If the one next to it is a star or it's still on the board
-                widthColumn = p.colPos - 1
-                
-                # Try to place element to right
-                if((widthColumn + 1) <= self.colLimit):
-                    if(matrix[p.rowPos - 1][widthColumn + 1] == '*'):
-                        print((matrix[p.rowPos - 1][widthColumn + 1] == '*') is True)
-                        matrix[p.rowPos - 1][widthColumn + 1] = p.name
-                else:
-                    # Trying for left
-                    if((widthColumn - 1) >= self.colLimit):
-                        if(matrix[p.rowPos - 1][widthColumn - 1] == '*'):
-                            matrix[p.rowPos - 1][widthColumn - 1] = p.name
+                originalColumn = p.colPos - 1
+                left = p.colPos - 2
+                right = p.colPos
+                widthIter = p.width - 1
+                print("Starting width is " + str(widthIter))
+                while( (right < self.colLimit) and (matrix[p.rowPos - 1][right] == '*') and (widthIter > 0)):
+                    matrix[p.rowPos - 1][right] = p.name
+                    right = right + 1
+                    widthIter = widthIter - 1
+                    print("widthIter during right", str(widthIter))
+
+                if(widthIter > 0):
+                    print("Still need to do widthIter for left")
+                    while( (left > 0) and (matrix[p.rowPos - 1][left] == '*') and (widthIter > 0)):
+                        matrix[p.rowPos - 1][left] = p.name
+                        left = left - 1
+                        widthIter = widthIter - 1
+                        print("widthIter during left", str(widthIter))
+                print(str(widthIter))
+                print("Ending width is 0 " + str(widthIter == 0))
+
+            # if(p.height > 1):
+            #     print("Piece " + p.name + "'s height is " + str(p.height))
+            #     # If the one next to it is a star or it's still on the board
+            #     originalColumn = p.colPos - 1
+            #     left = p.colPos - 2
+            #     right = p.colPos
+            #     widthIter = p.width - 1
+            #     print("Starting width is " + str(widthIter))
+            #     while( (right < self.colLimit) and (matrix[p.rowPos - 1][right] == '*') and (widthIter > 0)):
+            #         matrix[p.rowPos - 1][right] = p.name
+            #         right = right + 1
+            #         widthIter = widthIter - 1
+            #         print("widthIter during right", str(widthIter))
+
+            #     if(widthIter > 0):
+            #         print("Still need to do widthIter for left")
+            #         while( (left > 0) and (matrix[p.rowPos - 1][left] == '*') and (widthIter > 0)):
+            #             matrix[p.rowPos - 1][left] = p.name
+            #             left = left - 1
+            #             widthIter = widthIter - 1
+            #             print("widthIter during left", str(widthIter))
+            #     print(str(widthIter))
+            #     print("Ending width is 0 " + str(widthIter == 0))
+
                     
+
+
+
+
+                # Part 1: Unless you hit a wall or another piece
+                # Add a piece to the right, and to the right of that one, etc.
+
+                # Part 2
+                # Restore original width from before
+
+                # Part 3: Confirm here width Demo is 0, meaning all pieces were added to fill with, right then left
+                # print("Ending width to fill" + str(widthDemo))
 
             # for p in self.objects:
             #     2DArr[p.rowPos - 1][p.colPos - 1] = p.pStr
@@ -222,13 +269,12 @@ def slidingBlock(filename):
     print(myGrid.allPieces())
     print(myGrid.gridState())
 
-
     # Insert BFS Logic here after input from file to grid is fully tested
 
     file.close()
 
 
-slidingBlock ("proj3k.txt")
+slidingBlock ("proj3b.txt")
 # slidingBlock ("proj3b.txt")
 # slidingBlock ("proj3k.txt")
 # slidingBlock ("proj3a.data")
