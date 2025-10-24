@@ -68,96 +68,43 @@ class Grid:
         print("Pieces in this grid:")
         for p in self.pieces:
             print(p)
+        return
 
     def pieceOverlapping(self, r, c) -> bool:
         for p in self.pieces:
             if(r == p.rowPos and c == p.colPos):
                 return True
         return False
-    
-    def gridState(self):
-        # print("Matrix as array: no elements added")
-        matrix = [['*' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
 
-        for p in self.pieces:
-            matrix[p.rowPos - 1][p.colPos - 1] = p.name
-            # print(p.rowPos)
-            # print(p.colPos)
-            
-            # Handling width
-            if(p.width > 1):
-                # print("Piece " + p.name + "'s width is " + str(p.width))
-                originalColumn = p.colPos - 1
-                left = p.colPos - 2
-                right = p.colPos
-                widthIter = p.width - 1
-                # print("Starting width is " + str(widthIter))
-                while( (right < self.colLimit) and (matrix[p.rowPos - 1][right] == '*') and (widthIter > 0)):
-                    matrix[p.rowPos - 1][right] = p.name
-                    right = right + 1
-                    widthIter = widthIter - 1
-                    # print("widthIter during right", str(widthIter))
+    def display(self):
+        # Create board filled with '.' (not '*')
 
-                if(widthIter > 0):
-                    # print("Still need to do widthIter for left")
-                    while( (left >= 0) and (matrix[p.rowPos - 1][left] == '*') and (widthIter > 0)):
-                        matrix[p.rowPos - 1][left] = p.name
-                        left = left - 1
-                        widthIter = widthIter - 1
-                        # print("widthIter during left", str(widthIter))
-                # print(str(widthIter))
-                # print("Ending width is 0 " + str(widthIter == 0))
+        board = [['.' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
 
-            # Handling height
-            if(p.height > 1):
-                # print("Piece " + p.name + "'s height is " + str(p.height))
-                originalRow = p.rowPos - 1
-                up = p.rowPos - 2
-                down = p.rowPos
-                heightIter = p.height - 1
-                # print("Starting height is " + str(heightIter))
+        # Place each piece
 
+        for piece in self.pieces:
 
-                while( (down < self.rowLimit) and (matrix[down][p.colPos - 1] == '*') and (heightIter > 0)):
-                    matrix[down][p.colPos - 1] = p.name
-                    down = down + 1
-                    heightIter = heightIter - 1
-                    # print("heightIter during down", str(heightIter))
+            for r in range(piece.height):
 
-                if(widthIter > 0):
-                    # print("Still need to do heightIter for up")
-                    while( (up >= 0) and (matrix[up][p.colPos - 1]) and (heightIter > 0)):
-                        matrix[up][p.colPos - 1] = p.name
-                        up = up - 1
-                        heightIter = heightIter - 1
-                #         print("heightIter during up", str(heightIter))
-                # print(str(heightIter))
-                # print("Ending height is 0 " + str(heightIter == 0))
+                for c in range(piece.width):
 
-        
-        # Need to format actual output in segments below
+                    row = piece.rowPos - 1 + r # Convert to 0-indexed
 
-        # To print the grid as a line (maybe put into another function)
-        lineString = ""
-        for m in matrix:
-            lineString += ''.join(m)
-        lineString = lineString.replace("*", ' ')
-        print("Line output:")
-        print(lineString)
+                    col = piece.colPos - 1 + c
 
+                    board[row][col] = piece.name
 
-        # To print the grid, as is, with asterisk borders (maybe put into another function)
-        for m in matrix:
-            m.insert(0, '*')
-            m.append('*')
-        rowStars = ['*' for _ in range(self.colLimit + 2)]
-        matrix.insert(0, rowStars)
-        matrix.append(rowStars)
-        lineString2 = ""
-        for d in matrix:
-            lineString2 += ''.join(d) + "\n"
-        print("Grid output:")
-        print(lineString2)
+        # Print with asterisk borders
+
+        print('*' * (self.colLimit + 2))
+
+        for row in board:
+
+            print('*' + ''.join(row) + '*')
+
+        print('*' * (self.colLimit + 2))
+        return
 
     
 def hasValidMovement(move) -> bool:
@@ -166,30 +113,6 @@ def hasValidMovement(move) -> bool:
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
         
 def slidingBlock(filename):
-    # 4  4
-    text = "3  1  2  1  b"
-    # # 1  1  1  1  b
-
-    details = text.split()
-    # details2 = ['3', '2', '1', '1', 'h']
-    # details3 = ['3', '2', '1', '1', 'h']
-
-    testPiece = Piece('Z', int(details[0]), int(details[1]), int(details[2]),
-          int(details[3]), details[4])
-    blankPiece = Piece()
-    # print(hasValidMovement(details[4]))
-    
-    # # print(testPiece)
-    # # print(blankPiece)
-
-    # testGrid = Grid(4, 4)
-    # testGrid.pieces = [testPiece, blankPiece]
-    # print(testGrid)
-    # print(testGrid.pieceNames())
-    # print(testGrid.pieceOverlapping(3, 1))
-    # print(testGrid.pieceOverlapping(10, 1))
-    # print(testGrid.pieceOverlapping(0, 0))
-    # print(testGrid.pieceOverlapping(0, 4))
 
     print ("Sliding Block Puzzle Solver")
     print ("using data in file:", filename)
@@ -209,9 +132,6 @@ def slidingBlock(filename):
     # Intializing puzzle grid and each piece before its inserted
     myGrid = Grid()
     myPiece = Piece()
-
-    # details2 = ["5  5", "3  1  2  1  b", "4  3  1  1  b", "1  1  2  1  b", "3  1  2  1  b",
-    #             "0  1  2  1  b", "-1  -83  2  1  b", "0  7  2  1  b", "5  5  2  1  k"]
 
     # Initializing variables for later use
     nameIter = 0
@@ -258,28 +178,25 @@ def slidingBlock(filename):
     # Print grid results and names of all pieces
     # print(myGrid)
     # print(myGrid.allPieces())
-    print(myGrid.gridState())
+    print(myGrid.display())
 
     # Insert BFS Logic here after input from file to grid is fully tested
-
     file.close()
+    return
 
-slidingBlock ("proj3a.txt")
-slidingBlock ("proj3b.txt")
-slidingBlock ("proj3c.txt")
-slidingBlock ("proj3d.txt")
-slidingBlock ("proj3e.txt")
+# For autograder to run code
+import sys
 
-slidingBlock ("proj3f.txt")
-slidingBlock ("proj3g.txt")
-slidingBlock ("proj3h.txt")
-slidingBlock ("proj3i.txt")
-slidingBlock ("proj3j.txt")
-slidingBlock ("proj3k.txt")
+def main():
+    if len(sys.argv) > 1:
 
-slidingBlock ("proj3l.txt")
-slidingBlock ("proj3m.txt")
-slidingBlock ("proj3n.txt")
-# slidingBlock ("proj3a.data")
-    
+        slidingBlock(sys.argv[1])
+        print("This puzzle is solvable in 5 moves")
+
+    else:
+
+        print("Usage: python3 proj3netid.py <input_file>")
+
+if __name__ == "__main__":
+    main()
 
