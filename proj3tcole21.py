@@ -8,7 +8,6 @@ Starter code for CS 351 F25 Project 3
  - Sliding Block Puzzles
 """
 
-import numpy as np
 
 class Piece:
     def __init__ (self, name="", rowPos=0, colPos=0, width=0, height=0, moves="n"):
@@ -41,9 +40,20 @@ class Movement:
         self.direction = "u"
         self.distance = 0
 
-    # Could use Movement class to manage piece movement and restructuring of Grid pieces
-    # Remember: No pieces get removed, only moved out and replaced
-    # Make sure to replace former locations in Grid with *
+    # def movePiece(self, toMove):
+    #     Piece moved = self.piece
+        
+    #     return moved
+    #     pass
+
+    # # Could rework statement from the local one outside the Movement class
+    # def hasValidMovement(move) -> bool:
+    #     return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
+
+
+    # Could use Movement class to manage piece movement and change a Grid Piece(),
+    # which then affects what the Grid prints out
+    # Remember: No pieces get removed, only moved to another pos. and replaced with *
 
 class Grid:
     def __init__ (self, rowLimit=0, colLimit=0):
@@ -150,8 +160,8 @@ class Grid:
         print(lineString2)
 
     
-def hasValidMovement(m) -> bool:
-    return (m == 'h') or (m == 'v') or (m == 'b') or (m == 'n')
+def hasValidMovement(move) -> bool:
+    return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
     
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
         
