@@ -111,6 +111,33 @@ def hasValidMovement(move) -> bool:
     return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
     
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
+
+    
+
+class searchSolutions:
+    # Think carefully what variables yu want to share
+    def __
+        self.grid = Grid()
+        self.path = ""
+    
+    def returnSolvedGrid(): (if there is one)
+        return solvedGrid
+
+    def returnAllPossibleSequences
+        return path
+
+    def prinntResult:
+        run_bfs()
+        primt(gird, path,...)
+
+    def run_bfs():
+        puzzle.returnSolvedGrid()
+        puzzle.returnAllPossibleSequences()
+        
+
+
+    SearchSolutions puzzle = (Grid, "")
+    puzzle.printresult()
         
 def slidingBlock(filename):
 
@@ -181,6 +208,19 @@ def slidingBlock(filename):
     print(myGrid.display())
 
     # Insert BFS Logic here after input from file to grid is fully tested
+
+    # Ctete a class to search function that uses BFS
+
+    # 
+    # Could break when you find a puzzle with no solution
+    # Text TA< can I use memory constraint for assignment to tell when there's no solution for a puzzle (psutil)
+    #     Capping the memory somehow
+    # Ask the autograder about teh psytil libary
+    # "Cases of really long and really large memory go together"
+    # psutil.Process - start process
+    # process.memory_info().rss - to get the memory after each iteration, "If the memory is larger than one GB, force a break into the loop"
+
+
     file.close()
     return
 
