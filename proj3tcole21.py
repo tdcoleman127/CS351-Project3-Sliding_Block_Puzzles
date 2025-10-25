@@ -35,24 +35,50 @@ class Piece:
     
     
 class Movement:
-    def __init__ (self):
-        self.piece = None
-        self.direction = "u"
-        self.distance = 0
+    def __init__ (self, piece=None, direction="u", distance=0):
+        self.piece = piece
+        self.direction = direction
+        self.distance = distance
 
-    # def movePiece(self, toMove):
-    #     Piece moved = self.piece
-        
-    #     return moved
-    #     pass
+    def movePiece(currentGrid, pieceToMove, distToMove):
+
+        for p in currentGrid.pieces:
+
+            if pieceToMove == p:
+                print("Before")
+                # Piece index of piece
+                print(p.rowPos)
+                print(p.colPos)
+
+                # Grid index is being affected, pieceIndex - 1
+                gridRowPos = p.rowPos
+
+                # Calculate it first to see if it will work
+                calc = gridRowPos + distToMove
+                print("Trying to move: " + str(distToMove) + " steps")
+                # flag = 0
+                # for i in range(p.width):
+                #     if currentGrid.isPiecePos(calc, p.colPos) == False:
+                #         flag = 1
+                
+                if( (calc > 0) and (calc <= currentGrid.rowLimit)):
+                    p.rowPos = calc
+
+                # Piece index of piece
+                print("After")
+                print(p.rowPos)
+                print(p.colPos)
+
+        # return moved
+        print("Yo mama - Gregg")
+        pass
+
+
 
     def hasValidMovement(move) -> bool:
         return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
 
     # # Could rework statement from the local one outside the Movement class
-    # def hasValidMovement(move) -> bool:
-    #     return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
-
 
     # Could use Movement class to manage piece movement and change a Grid Piece(),
     # which then affects what the Grid prints out
@@ -76,6 +102,7 @@ class Grid:
     def pieceOverlapping(self, r, c) -> bool:
         for p in self.pieces:
             if(r == p.rowPos and c == p.colPos):
+                print("There's a piece here, at: " + p.name)
                 return True
         return False
 
@@ -202,16 +229,20 @@ def slidingBlock(filename):
                     myGrid.pieces.append(myPiece)
                     nameIter = nameIter + 1
 
-    # Print grid results and names of all pieces
-    # print(myGrid)
-    # print(myGrid.allPieces())
+    print("Before movement")
     print(myGrid.display())
 
     # Insert BFS Logic here after input from file to grid is fully tested
+    pieceA = myGrid.pieces[4]
+    # movingPieceA = Movement(pieceA, pieceA.moves, 3)
+    # movingPieceA.movePiece()
+    Movement.movePiece(myGrid, pieceA, pieceA.moves, 2)
 
-    # Ctete a class to search function that uses BFS
+    print("After movement")
+    print(myGrid.display())
 
-    # 
+    # Notes from Friday (10/24) Meeting with TA Flameflake
+    # Create a class to search function that uses BFS
     # Could break when you find a puzzle with no solution
     # Text TA< can I use memory constraint for assignment to tell when there's no solution for a puzzle (psutil)
     #     Capping the memory somehow
