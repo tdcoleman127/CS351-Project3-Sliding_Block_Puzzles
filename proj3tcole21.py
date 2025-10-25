@@ -46,6 +46,9 @@ class Movement:
     #     return moved
     #     pass
 
+    def hasValidMovement(move) -> bool:
+        return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
+
     # # Could rework statement from the local one outside the Movement class
     # def hasValidMovement(move) -> bool:
     #     return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
@@ -107,37 +110,34 @@ class Grid:
         return
 
     
-def hasValidMovement(move) -> bool:
-    return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
-    
 # print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
 
     
 
-class searchSolutions:
-    # Think carefully what variables yu want to share
-    def __
-        self.grid = Grid()
-        self.path = ""
+# class searchSolutions:
+#     # Think carefully what variables yu want to share
+#     def __
+#         self.grid = Grid()
+#         self.path = ""
     
-    def returnSolvedGrid(): (if there is one)
-        return solvedGrid
+#     def returnSolvedGrid(): (if there is one)
+#         return solvedGrid
 
-    def returnAllPossibleSequences
-        return path
+#     def returnAllPossibleSequences
+#         return path
 
-    def prinntResult:
-        run_bfs()
-        primt(gird, path,...)
+#     def prinntResult:
+#         run_bfs()
+#         primt(gird, path,...)
 
-    def run_bfs():
-        puzzle.returnSolvedGrid()
-        puzzle.returnAllPossibleSequences()
+#     def run_bfs():
+#         puzzle.returnSolvedGrid()
+#         puzzle.returnAllPossibleSequences()
         
 
 
-    SearchSolutions puzzle = (Grid, "")
-    puzzle.printresult()
+#     SearchSolutions puzzle = (Grid, "")
+#     puzzle.printresult()
         
 def slidingBlock(filename):
 
@@ -189,7 +189,7 @@ def slidingBlock(filename):
             elif( myGrid.pieceOverlapping(int(puzzleInput[0]), int(puzzleInput[1])) == True ):
                 # Piece overlaps with a created piece 
                 print("Warning: Piece with starting position of R,C overlaps with other piece")
-            elif( hasValidMovement(puzzleInput[4]) == False):
+            elif( Movement.hasValidMovement(puzzleInput[4]) == False):
                 # Handle invalid direction of movement
                 print("Warning: Piece with starting position of R,C has invalid movement")
             else:
