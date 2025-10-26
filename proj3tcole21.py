@@ -46,41 +46,46 @@ class Movement:
 
             if pieceToMove == p:
                 # For up and down movement
-                if(direction == "up" or direction == "down") and (pieceToMove.moves == "b" or pieceToMove.moves == "v"):
-                    # print("Before")
-                    # # Piece index of piece
-                    # print(p.rowPos)
-                    # print(p.colPos)
+                if(pieceToMove.moves == "b" or pieceToMove.moves == "v"):
+                    if(direction == "up"):
+                        distToMove = -1 * distToMove
+                        gridRowPos = p.rowPos
+                        calc = gridRowPos + distToMove                    
+                        if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
+                            p.rowPos = calc
+                            print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) up")
+                        return
+                    if(direction == "down"):
+                        gridRowPos = p.rowPos
+                        calc = gridRowPos + distToMove                    
+                        if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
+                            p.rowPos = calc
+                            print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
+                        return
 
-                    # TO handle moving up/down
-                    # Grid index is being affected, pieceIndex - 1
-                    gridRowPos = p.rowPos
+                if(pieceToMove.moves == "b" or pieceToMove.moves == "h"):
+                    if(direction == "left"):
+                        distToMove = -1 * distToMove
+                        gridColPos = p.colPos
+                        calc = gridColPos + distToMove
+                        if( (calc > 0) and (calc <= currentGrid.colLimit) ):
+                            p.colPos = calc
+                            print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) down")
+                        return                    
+                    if(direction == "right"):
+                        gridColPos = p.colPos
+                        calc = gridColPos + distToMove
+                        # flag = ""
+                        # for i in range(p.width):
+                        #     print(i)
+                        #     if (currentGrid.pieceOverlapping(calc, p.colPos + i) == False) and (i != 0):
+                        #         flag = "Overlap"
+                        #         print("Overlap occurring")
+                        if( (calc > 0) and (calc <= currentGrid.colLimit) ):
+                            p.colPos = calc
+                            print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
+                        return                    
 
-                    # Calculate it first to see if it will work
-                    calc = gridRowPos + distToMove
-                    print("Trying to move: " + str(distToMove) + " steps")
-                    # flag = ""
-                    # for i in range(p.width):
-                    #     print(i)
-                    #     if (currentGrid.pieceOverlapping(calc, p.colPos + i) == False) and (i != 0):
-                    #         flag = "Overlap"
-                    #         print("Overlap occurring")
-                    
-                    if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
-                        p.rowPos = calc
-
-                    # # Piece index of piece
-                    # print("After")
-                    # print(p.rowPos)
-                    # print(p.colPos)
-                elif(direction == "left" or direction == "right") and (pieceToMove.moves == "b" or pieceToMove.moves == "h"):
-                    gridColPos = p.colPos
-                    calc = gridColPos + distToMove
-                    print("Trying to move: " + str(distToMove) + " steps")
-                    if( (calc > 0) and (calc <= currentGrid.colLimit) ):
-                        p.colPos = calc
-
-        # return moved
         return
 
 
@@ -154,38 +159,64 @@ class Grid:
 
         print('*' * (self.colLimit + 2))
         return
-
-    
-# print("Piece " + Piece.name + " moves " + Movement.distance + "spaces " + direction)
-
     
 
-# class searchSolutions:
-#     # Think carefully what variables yu want to share
-#     def __
-#         self.grid = Grid()
-#         self.path = ""
+class searchSolutions:
+    # Think carefully what variables yu want to share
+    def __init__(self):
+        self.grid = grid
+        self.path = ""
     
-#     def returnSolvedGrid(): (if there is one)
-#         return solvedGrid
+    # def returnSolvedGrid(self): 
+    #     # (if there is one)
+    #     return solvedGrid
+    #     pass
 
-#     def returnAllPossibleSequences
-#         return path
+    # def returnAllPossibleSequences(self):
+    #     return path
+    #     pass
 
-#     def prinntResult:
-#         run_bfs()
-#         primt(gird, path,...)
+    # def printResult(self):
+    #     run_bfs()
+    #     [primt](gird, path,...)
+    #     pass
 
-#     def run_bfs():
-#         puzzle.returnSolvedGrid()
-#         puzzle.returnAllPossibleSequences()
+    # def run_bfs(self):
+    #     # The visited set of Grid states
+    #     visited = {}
+        
+    #     # To have Grid states added as they are made
+    #     queue = []
+    #     possDirections = ["up", "down", "left", "right"]
+
+    #     queue.append(initialGrid)
+    #     visited
+
+    #     while queue:
+    #         # Each iteration should create new grids that will be ran
+    #         # For the next queue to 
+    #         grid = queue.pop(0)
+    #         for p in grid.pieces:
+    #             for d in possDirections:
+    #                     for i in range(grid.colLimit):
+    #                     # Move the piece
+    #                     visited.append(modifiedGrid)
+    #                     if()
+
+    #     puzzle.returnSolvedGrid()
+    #     puzzle.returnAllPossibleSequences()
+    #     pass
         
 
 
-#     SearchSolutions puzzle = (Grid, "")
-#     puzzle.printresult()
+    # SearchSolutions puzzle = (Grid, "")
+    # puzzle.printresult()
         
 def slidingBlock(filename):
+
+    # Intializing puzzle grid and each piece before its inserted
+    myGrid = Grid()
+    myPiece = Piece()
 
     print ("Sliding Block Puzzle Solver")
     print ("using data in file:", filename)
@@ -202,15 +233,11 @@ def slidingBlock(filename):
     
     # Logic for inserting pieces into the grid from file input
 
-    # Intializing puzzle grid and each piece before its inserted
-    myGrid = Grid()
-    myPiece = Piece()
 
     # Initializing variables for later use
     nameIter = 0
     possibleNames = "Z 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y"
     possibleNames = possibleNames.split()
-
 
     # Reading in each line in file
     for item in file:
@@ -248,17 +275,19 @@ def slidingBlock(filename):
                     myGrid.pieces.append(myPiece)
                     nameIter = nameIter + 1
 
-    print("Before movement")
+    # print("Before movement")
     print(myGrid.display())
 
     # Insert BFS Logic here after input from file to grid is fully tested
-    pieceA = myGrid.pieces[4]
+    # pieceA = myGrid.pieces[4]
+    # pieceB = myGrid.pieces[3]
     # movingPieceA = Movement(pieceA, pieceA.moves, 3)
     # movingPieceA.movePiece()
-    Movement.movePiece(myGrid, pieceA, "up", 5)
+    # Movement.movePiece(myGrid, pieceA, "up", 1)
+    # Movement.movePiece(myGrid, pieceB, "right", 3)
 
-    print("After movement")
-    print(myGrid.display())
+    # print("After movement")
+    # print(myGrid.display())
 
     # Notes from Friday (10/24) Meeting with TA Flameflake
     # Create a class to search function that uses BFS
