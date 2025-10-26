@@ -40,38 +40,48 @@ class Movement:
         self.direction = direction
         self.distance = distance
 
-    def movePiece(currentGrid, pieceToMove, distToMove):
+    def movePiece(currentGrid, pieceToMove, direction, distToMove):
 
         for p in currentGrid.pieces:
 
             if pieceToMove == p:
-                print("Before")
-                # Piece index of piece
-                print(p.rowPos)
-                print(p.colPos)
+                # For up and down movement
+                if(direction == "up" or direction == "down") and (pieceToMove.moves == "b" or pieceToMove.moves == "v"):
+                    # print("Before")
+                    # # Piece index of piece
+                    # print(p.rowPos)
+                    # print(p.colPos)
 
-                # Grid index is being affected, pieceIndex - 1
-                gridRowPos = p.rowPos
+                    # TO handle moving up/down
+                    # Grid index is being affected, pieceIndex - 1
+                    gridRowPos = p.rowPos
 
-                # Calculate it first to see if it will work
-                calc = gridRowPos + distToMove
-                print("Trying to move: " + str(distToMove) + " steps")
-                # flag = 0
-                # for i in range(p.width):
-                #     if currentGrid.isPiecePos(calc, p.colPos) == False:
-                #         flag = 1
-                
-                if( (calc > 0) and (calc <= currentGrid.rowLimit)):
-                    p.rowPos = calc
+                    # Calculate it first to see if it will work
+                    calc = gridRowPos + distToMove
+                    print("Trying to move: " + str(distToMove) + " steps")
+                    # flag = ""
+                    # for i in range(p.width):
+                    #     print(i)
+                    #     if (currentGrid.pieceOverlapping(calc, p.colPos + i) == False) and (i != 0):
+                    #         flag = "Overlap"
+                    #         print("Overlap occurring")
+                    
+                    if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
+                        p.rowPos = calc
 
-                # Piece index of piece
-                print("After")
-                print(p.rowPos)
-                print(p.colPos)
+                    # # Piece index of piece
+                    # print("After")
+                    # print(p.rowPos)
+                    # print(p.colPos)
+                elif(direction == "left" or direction == "right") and (pieceToMove.moves == "b" or pieceToMove.moves == "h"):
+                    gridColPos = p.colPos
+                    calc = gridColPos + distToMove
+                    print("Trying to move: " + str(distToMove) + " steps")
+                    if( (calc > 0) and (calc <= currentGrid.colLimit) ):
+                        p.colPos = calc
 
         # return moved
-        print("Yo mama - Gregg")
-        pass
+        return
 
 
 
@@ -100,11 +110,20 @@ class Grid:
         return
 
     def pieceOverlapping(self, r, c) -> bool:
+        # Piece overlap = ("", rowPos=0, colPos=0, width=0, height=0, moves="n"):
         for p in self.pieces:
             if(r == p.rowPos and c == p.colPos):
                 print("There's a piece here, at: " + p.name)
                 return True
         return False
+
+        # for p in self.pieces:
+        #     if(p.rowPos + p.width <= r or
+        #        p.rowPos + p.width <= r or
+        #        p.rowPos + p.width <= r or
+        #        p.rowPos + p.width <= r or):
+        #         return False
+        #     return True
 
     def display(self):
         # Create board filled with '.' (not '*')
@@ -236,7 +255,7 @@ def slidingBlock(filename):
     pieceA = myGrid.pieces[4]
     # movingPieceA = Movement(pieceA, pieceA.moves, 3)
     # movingPieceA.movePiece()
-    Movement.movePiece(myGrid, pieceA, pieceA.moves, 2)
+    Movement.movePiece(myGrid, pieceA, "up", 5)
 
     print("After movement")
     print(myGrid.display())
