@@ -153,6 +153,29 @@ class Grid:
             
         return True
 
+    def generateMoves(self):
+        moves = []
+        for piece in self.pieces:
+            # Try moving down
+            if piece.canMoveDown():
+                distance = 1
+                while True:
+                    newRow = piece.rowPos + distance
+                    if self.isValidPosition(piece, newRow, piece.colPos):
+                        # Valid move - add to list
+                        move = Movement()
+                        move.piece = piece.name
+                        move.direction = 'd'
+                        move.distance = distance
+                        moves.append(move)
+                        distance += 1
+                    else:
+                        break  # Can't move further, stop trying
+                    
+            # ... same for other directions
+        return moves
+
+
     def display(self):
         # Create board filled with '.' (not '*')
 
@@ -183,53 +206,74 @@ class Grid:
         print('*' * (self.colLimit + 2))
         return
     
-
-class searchSolutions:
-    # Think carefully what variables yu want to share
+import queue
+    
+class PuzzleState:
     def __init__(self):
         self.grid = ""
-        self.path = ""
+        self.validMoves = []
     
-    # def returnSolvedGrid(self): 
-    #     # (if there is one)
-    #     return solvedGrid
-    #     pass
+    def returnSolvedGrid(self): 
+        # (if there is one)
+        # return solvedGrid
+        pass
 
-    # def returnAllPossibleSequences(self):
-    #     return path
-    #     pass
+    def returnAllPossibleSequences(self):
+        # return path
+        pass
 
-    # def printResult(self):
-    #     run_bfs()
-    #     [primt](gird, path,...)
-    #     pass
+    def printResult(self):
+        # run_bfs()
+        # [primt](gird, path,...)
+        pass
 
-    # def run_bfs(self):
-    #     # The visited set of Grid states
-    #     visited = {}
+    def solvePuzzle(initialGrid):
+        # puzzle.returnSolvedGrid()
+        # puzzle.returnAllPossibleSequences()
+
+        # Check if already at goal
+        if initialGrid.isGoalReached():
+            return []  # Already solved, 0 moves
         
-    #     # To have Grid states added as they are made
-    #     queue = []
-    #     possDirections = ["up", "down", "left", "right"]
+        # BFS setup
+        my_queue = queue.Queue()
+        visited = set()
 
-    #     queue.append(initialGrid)
-    #     visited
+        # Add initial state
+        initialState = PuzzleState(initialGrid, [])
+        my_queue.put(initialState)
+        visited.add(initialGrid.getStateString())
 
-    #     while queue:
-    #         # Each iteration should create new grids that will be ran
-    #         # For the next queue to 
-    #         grid = queue.pop(0)
-    #         for p in grid.pieces:
-    #             for d in possDirections:
-    #                     for i in range(grid.colLimit):
-    #                     # Move the piece
-    #                     visited.append(modifiedGrid)
-    #                     if()
+        # BFS loop
+        while not my_queue.empty():
+            currentState = my_queue.get()
 
-    #     puzzle.returnSolvedGrid()
-    #     puzzle.returnAllPossibleSequences()
-    #     pass
-        
+            # Generate all possible moves
+            possibleMoves = currentState.grid.generateMoves()
+
+            for move in possibleMoves:
+
+                # Apply move to get new grid state
+                newGrid = currentState.grid.applyMove(move)
+                stateString = newGrid.getStateString()
+
+                # Skip if we've seen this state before
+                if stateString in visited:
+                    continue
+
+                visited.add(stateString)
+
+                # Check if goal reached
+                if newGrid.isGoalReached():
+                    return currentState.moveList + [move]
+                
+                # Add new state to queue
+                newState = PuzzleState(newGrid, currentState.moveList + [move])
+                my_queue.put(newState)
+                    
+        # Queue is empty and we never found goal
+        # This means NO SOLUTION exists
+        return None        
 
 
     # SearchSolutions puzzle = (Grid, "")
