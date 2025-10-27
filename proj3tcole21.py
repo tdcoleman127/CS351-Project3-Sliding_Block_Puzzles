@@ -207,11 +207,16 @@ class Grid:
         return
     
 import queue
-    
+
 class PuzzleState:
     def __init__(self):
         self.grid = ""
-        self.validMoves = []
+        self.moveList = []
+    
+class PuzzleSolving:
+    def __init__(self):
+        self.grid = ""
+        self.moveList = []
     
     def returnSolvedGrid(self): 
         # (if there is one)
