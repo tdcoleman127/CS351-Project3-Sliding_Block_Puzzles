@@ -33,60 +33,69 @@ class Piece:
             canMove = "unspecified"
         return "Piece " + self.name + " at row " + str(self.rowPos) + " and col " + str(self.colPos) + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions"
     
-    
+    def canMoveDown():
+        pass
+    def canMoveUp():
+        pass
+    def canMoveLeft():
+        pass
+    def canMoveRight():
+        pass
+
+
 class Movement:
     def __init__ (self, piece=None, direction="u", distance=0):
         self.piece = piece
         self.direction = direction
         self.distance = distance
 
-    def movePiece(currentGrid, pieceToMove, direction, distToMove):
+    # def movePiece(currentGrid, pieceToMove, direction, distToMove):
 
-        for p in currentGrid.pieces:
+    #     for p in currentGrid.pieces:
 
-            if pieceToMove == p:
-                # For up and down movement
-                if(pieceToMove.moves == "b" or pieceToMove.moves == "v"):
-                    if(direction == "up"):
-                        distToMove = -1 * distToMove
-                        gridRowPos = p.rowPos
-                        calc = gridRowPos + distToMove                    
-                        if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
-                            p.rowPos = calc
-                            print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) up")
-                        return
-                    if(direction == "down"):
-                        gridRowPos = p.rowPos
-                        calc = gridRowPos + distToMove                    
-                        if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
-                            p.rowPos = calc
-                            print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
-                        return
+    #         if pieceToMove == p:
+    #             # For up and down movement
+    #             if(pieceToMove.moves == "b" or pieceToMove.moves == "v"):
+    #                 if(direction == "up"):
+    #                     distToMove = -1 * distToMove
+    #                     gridRowPos = p.rowPos
+    #                     calc = gridRowPos + distToMove                    
+    #                     if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
+    #                         p.rowPos = calc
+    #                         print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) up")
+    #                     return
+    #                 if(direction == "down"):
+    #                     gridRowPos = p.rowPos
+    #                     calc = gridRowPos + distToMove                    
+    #                     if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
+    #                         p.rowPos = calc
+    #                         print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
+    #                     return
 
-                if(pieceToMove.moves == "b" or pieceToMove.moves == "h"):
-                    if(direction == "left"):
-                        distToMove = -1 * distToMove
-                        gridColPos = p.colPos
-                        calc = gridColPos + distToMove
-                        if( (calc > 0) and (calc <= currentGrid.colLimit) ):
-                            p.colPos = calc
-                            print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) down")
-                        return                    
-                    if(direction == "right"):
-                        gridColPos = p.colPos
-                        calc = gridColPos + distToMove
-                        # flag = ""
-                        # for i in range(p.width):
-                        #     print(i)
-                        #     if (currentGrid.pieceOverlapping(calc, p.colPos + i) == False) and (i != 0):
-                        #         flag = "Overlap"
-                        #         print("Overlap occurring")
-                        if( (calc > 0) and (calc <= currentGrid.colLimit) ):
-                            p.colPos = calc
-                            print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
-                        return                    
+    #             if(pieceToMove.moves == "b" or pieceToMove.moves == "h"):
+    #                 if(direction == "left"):
+    #                     distToMove = -1 * distToMove
+    #                     gridColPos = p.colPos
+    #                     calc = gridColPos + distToMove
+    #                     if( (calc > 0) and (calc <= currentGrid.colLimit) ):
+    #                         p.colPos = calc
+    #                         print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) down")
+    #                     return                    
+    #                 if(direction == "right"):
+    #                     gridColPos = p.colPos
+    #                     calc = gridColPos + distToMove
+    #                     # flag = ""
+    #                     # for i in range(p.width):
+    #                     #     print(i)
+    #                     #     if (currentGrid.pieceOverlapping(calc, p.colPos + i) == False) and (i != 0):
+    #                     #         flag = "Overlap"
+    #                     #         print("Overlap occurring")
+    #                     if( (calc > 0) and (calc <= currentGrid.colLimit) ):
+    #                         p.colPos = calc
+    #                         print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
+    #                     return                    
 
-        return
+    #     return
 
 
 
@@ -174,6 +183,15 @@ class Grid:
                     
             # ... same for other directions
         return moves
+    
+    def isGoalReached():
+        pass
+
+    def getStateString():
+        pass
+
+    def applyMove(move):
+        pass
 
 
     def display(self):
@@ -214,24 +232,6 @@ class PuzzleState:
         self.moveList = []
     
 class PuzzleSolving:
-    def __init__(self):
-        self.grid = ""
-        self.moveList = []
-    
-    def returnSolvedGrid(self): 
-        # (if there is one)
-        # return solvedGrid
-        pass
-
-    def returnAllPossibleSequences(self):
-        # return path
-        pass
-
-    def printResult(self):
-        # run_bfs()
-        # [primt](gird, path,...)
-        pass
-
     def solvePuzzle(initialGrid):
         # puzzle.returnSolvedGrid()
         # puzzle.returnAllPossibleSequences()
@@ -279,10 +279,6 @@ class PuzzleSolving:
         # Queue is empty and we never found goal
         # This means NO SOLUTION exists
         return None        
-
-
-    # SearchSolutions puzzle = (Grid, "")
-    # puzzle.printresult()
         
 def slidingBlock(filename):
 
@@ -302,9 +298,6 @@ def slidingBlock(filename):
     except (FileNotFoundError, IOError):
         print("Error occurred opening file")
         return False
-    
-    # Logic for inserting pieces into the grid from file input
-
 
     # Initializing variables for later use
     nameIter = 0
