@@ -121,14 +121,37 @@ class Grid:
                 print("There's a piece here, at: " + p.name)
                 return True
         return False
-
-        # for p in self.pieces:
-        #     if(p.rowPos + p.width <= r or
-        #        p.rowPos + p.width <= r or
-        #        p.rowPos + p.width <= r or
-        #        p.rowPos + p.width <= r or):
-        #         return False
-        #     return True
+    
+    def isValidPosition(self, piece, newRow, newCol):
+        """Check if piece can be placed at (newRow, newCol) without conflicts"""
+        # Check if piece stays within grid bounds
+        if newRow < 1 or newCol < 1:
+            return False
+        if newRow + piece.height - 1 > self.rows:
+            return False
+        if newCol + piece.width - 1 > self.cols:
+            return False
+        # Check for overlaps with other pieces
+        for other in self.pieces:
+            # Don't check piece against itself
+            if other.name == piece.name:
+                continue
+            
+            # Calculate the boundaries of both rectangles
+            # piece: from (newRow, newCol) to (newRow + height - 1, newCol + width - 1)
+            # other: from (other.rowPos, other.colPos) to (other.rowPos + height - 1, other.colPos + width - 1
+            # Check if rectangles DON'T overlap (then negate)
+            noOverlap = (
+                newRow + piece.height - 1 < other.rowPos or      # piece is above other
+                newRow > other.rowPos + other.height - 1 or      # piece is below other
+                newCol + piece.width - 1 < other.colPos or       # piece is left of other
+                newCol > other.colPos + other.width - 1          # piece is right of other
+            )
+            # If they DO overlap, position is invalid
+            if not noOverlap:
+                return False
+            
+        return True
 
     def display(self):
         # Create board filled with '.' (not '*')
@@ -164,7 +187,7 @@ class Grid:
 class searchSolutions:
     # Think carefully what variables yu want to share
     def __init__(self):
-        self.grid = grid
+        self.grid = ""
         self.path = ""
     
     # def returnSolvedGrid(self): 
