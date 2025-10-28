@@ -203,8 +203,11 @@ class Grid:
         
 
     def applyMove(self, move):
+        newGrid = Grid(self.rowLimit, self.colLimit)
+        newGrid.pieces = self.pieces
+
         distToMove = move.distance
-        for p in self.pieces:
+        for p in newGrid.pieces:
             if p.name == move.piece:
                 if(move.direction == "up"):
                 # To apply move up
@@ -213,14 +216,14 @@ class Grid:
                         calc = gridRowPos + distToMove
                         if Grid.isValidPosition(self, p, calc, p.colPos) == True:                  
                             p.rowPos = calc
-                        return self
+                        return newGrid
                 # To apply move down
                 if(move.direction == "down"):
                         gridRowPos = p.rowPos
                         calc = gridRowPos + distToMove                    
                         if Grid.isValidPosition(self, p, calc, p.colPos) == True:                  
                             p.rowPos = calc
-                        return self
+                        return newGrid
                 # To apply move left
                 if(move.direction == "left"):
                         distToMove = -1 * distToMove
@@ -228,15 +231,15 @@ class Grid:
                         calc = gridColPos + distToMove
                         if Grid.isValidPosition(self, p, p.rowPos, calc) == True:                  
                             p.colPos = calc
-                        return self
+                        return newGrid
                 # To apply move right
                 if(move.direction == "right"):
                         gridColPos = p.colPos
                         calc = gridColPos + distToMove
                         if Grid.isValidPosition(self, p, p.rowPos, calc) == True:                  
                             p.colPos = calc
-                        return self
-        return self
+                        return newGrid
+        return newGrid
 
 
     def display(self):
@@ -281,6 +284,7 @@ class SolvedPuzzle:
     def __init__(self, grid=None, moveList=[]):
         self.grid = grid
         self.moveList = moveList
+        
 import copy
 
 def solvePuzzle(initialGrid):
@@ -308,9 +312,7 @@ def solvePuzzle(initialGrid):
             for move in possibleMoves:
 
                 # Apply move to get new grid state
-                newGrid = copy.deepcopy(currentState.grid)
-
-                newGrid.applyMove(move)
+                newGrid = currentState.grid.applyMove(move)
                 # newGrid.display()
                 stateString = newGrid.getStateString()
                 # print(stateString)
