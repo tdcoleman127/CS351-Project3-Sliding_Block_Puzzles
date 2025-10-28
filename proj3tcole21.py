@@ -180,31 +180,26 @@ class Grid:
     
     def isGoalReached(self):
         for p in self.pieces:
-            if(p.name == 'Z' and p.colPos == self.colLimit):
-                return True
+            if(p.colPos == self.colLimit):
+                if(p.name == "Z"):
+                    return True
         return False
 
     def getStateString(self):
 
-        board = [['.' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
-
+        board = [[' ' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
         for piece in self.pieces:
-
             for r in range(piece.height):
-
                 for c in range(piece.width):
-
                     row = piece.rowPos - 1 + r # Convert to 0-indexed
-
                     col = piece.colPos - 1 + c
 
-                    board[row][col] = piece.name
 
-        lineString = ""
-        for m in board:
-            lineString += ''.join(m)
-        lineString = lineString.replace(".", ' ')
-        return lineString
+                    if (0 <= row < self.rowLimit) and (0 <= col < self.colLimit):
+                        board[row][col] = piece.name
+
+        return ''.join(''.join(m) for m in board)
+        
         
 
     def applyMove(self, move):
@@ -216,31 +211,29 @@ class Grid:
                     gridRowPos = p.rowPos
                     calc = gridRowPos + distToMove                    
                     p.rowPos = calc
-                    print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) up")
-        
+                    return self
             # To apply move down
             if(move.direction == "down"):
                     gridRowPos = p.rowPos
                     calc = gridRowPos + distToMove                    
                     p.rowPos = calc
-                    print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
-
+                    return self
             # To apply move left
             if(move.direction == "left"):
                     distToMove = -1 * distToMove
                     gridColPos = p.colPos
                     calc = gridColPos + distToMove
                     p.colPos = calc
-                    print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) left")
-                 
+                    return self
             # To apply move right
             if(move.direction == "right"):
                     gridColPos = p.colPos
                     calc = gridColPos + distToMove
                     p.colPos = calc
-                    print("Piece " + p.name + " moves " + str(distToMove) + " space(s) right")
-
-        return
+                    return self
+            print("Displaying self")
+            self.display()
+        return self
 
 
     def display(self):
@@ -260,7 +253,8 @@ class Grid:
 
                     col = piece.colPos - 1 + c
 
-                    board[row][col] = piece.name
+                    if (0 <= row < self.rowLimit) and (0 <= col < self.colLimit):
+                        board[row][col] = piece.name
 
         # Print with asterisk borders
 
@@ -279,10 +273,13 @@ class PuzzleState:
     def __init__(self, grid=None, moveList=[]):
         self.grid = grid
         self.moveList = moveList
-    
-    def solvePuzzle(initialGrid):
-        # puzzle.returnSolvedGrid()
-        # puzzle.returnAllPossibleSequences()
+
+class SolvedPuzzle:
+    def __init__(self, grid=None, moveList=[]):
+        self.grid = grid
+        self.moveList = moveList
+
+def solvePuzzle(initialGrid):
 
         # Check if already at goal
         if initialGrid.isGoalReached():
@@ -307,8 +304,6 @@ class PuzzleState:
             for move in possibleMoves:
 
                 # Apply move to get new grid state
-                stateString = ""
-                newGrid = Grid()
                 newGrid = currentState.grid.applyMove(move)
                 stateString = newGrid.getStateString()
 
@@ -320,7 +315,10 @@ class PuzzleState:
 
                 # Check if goal reached
                 if newGrid.isGoalReached():
-                    return currentState.moveList + [move]
+                    finalGrid = currentState.grid
+                    fullMoveList = currentState.moveList + [move]
+                    sp = SolvedPuzzle(finalGrid, fullMoveList)
+                    return sp
                 
                 # Add new state to queue
                 newState = PuzzleState(newGrid, currentState.moveList + [move])
@@ -389,22 +387,23 @@ def slidingBlock(filename):
                                 int(puzzleInput[3]), puzzleInput[4])                
                     myGrid.pieces.append(myPiece)
                     nameIter = nameIter + 1
-
-    # print(myGrid.display())
-    # print(myGrid.getStateString())
+    myGrid.display()
     
     result = []
-    result = PuzzleState.solvePuzzle(myGrid)
+    result = solvePuzzle(myGrid)
     if(result == None):
         print("This puzzle has no solution")
     else:
         # Take apart result
         # Get number of steps needed to solve puzzle
         count = 0
-        for m in result:
+        for m in result.moveList:
             count += 1
-            print(count + ". Piece " + m.piece.name + " moves " + m.distance + " space(s) " + m.direction)
-        print("This puzzle is solvable in " +  count + " moves")
+            print(str(count) + ". Piece " + m.piece + " moves " + str(m.distance) + " space(s) " + m.direction)
+        print("This puzzle is solvable in " +  str(count) + " moves")
+        result.grid.display()
+        
+
     file.close()
     return
 
@@ -412,12 +411,10 @@ def slidingBlock(filename):
 import sys
 
 def main():
+    # slidingBlock("datafiles/proj3b.txt")
     if len(sys.argv) > 1:
-
         slidingBlock(sys.argv[1])
-
     else:
-
         print("Usage: python3 proj3netid.py <input_file>")
 
 if __name__ == "__main__":
