@@ -2,12 +2,14 @@
 """
 Created on Fri Oct 10 12:44:15 2025
 
-@author: troy
+@author: tcole21
 
-Starter code for CS 351 F25 Project 3
- - Sliding Block Puzzles
+ CS 351 F25 Project 3 - Sliding Block Puzzles
+
 """
 
+import sys
+import queue
 
 class Piece:
     def __init__ (self, name="", rowPos=0, colPos=0, width=0, height=0, moves="n"):
@@ -33,6 +35,7 @@ class Piece:
             canMove = "unspecified"
         return "Piece " + self.name + " at row " + str(self.rowPos) + " and col " + str(self.colPos) + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions"
     
+    # Functions for checking movement in different directions
     def canMoveDown(self):
         return (self.moves == 'v') or (self.moves == 'b')
     
@@ -52,6 +55,7 @@ class Movement:
         self.direction = direction
         self.distance = distance
 
+    # Functions for checking if a move has valid movement
     def hasValidMovement(move) -> bool:
         return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
 
@@ -64,22 +68,24 @@ class Grid:
     def __str__(self):
         return "The grid consists of " + str(len(self.pieces)) + " pieces across " + str(self.rowLimit) + " rows and " + str(self.colLimit) + " columns"
 
+    # Function to print all pieces in Grid
     def allPieces(self):
         print("Pieces in this grid:")
         for p in self.pieces:
             print(p)
         return
 
-    def pieceOverlapping(self, r, c) -> bool:
-        # Piece overlap = ("", rowPos=0, colPos=0, width=0, height=0, moves="n"):
+    # Old overlapping function to check if a piece is overlapping
+    def outdatedisOverlap(self, r, c) -> bool:
         for p in self.pieces:
             if(r == p.rowPos and c == p.colPos):
                 print("There's a piece here, at: " + p.name)
                 return True
         return False
     
+    # New function to replace outdatedisOverlap(), checks if a new position
+    # to place a piece is valid or not
     def isValidPosition(self, piece, newRow, newCol):
-        """Check if piece can be placed at (newRow, newCol) without conflicts"""
         # Check if piece stays within grid bounds
         if newRow < 1 or newCol < 1:
             return False
@@ -109,10 +115,12 @@ class Grid:
             
         return True
 
+    # Generates and returns a list of possible moves
+    # based on Grid pieces
     def generateMoves(self):
         moves = []
         for piece in self.pieces:
-            # Try moving down
+            # Trying to move up
             if piece.canMoveUp():
                 distance = 1
                 while True:
@@ -127,6 +135,7 @@ class Grid:
                         distance += 1
                     else:
                         break  # Can't move further, stop trying
+            # Trying to move down down
             if piece.canMoveDown():
                 distance = 1
                 while True:
@@ -141,11 +150,7 @@ class Grid:
                         distance += 1
                     else:
                         break  # Can't move further, stop trying
-                    
-            # ... same for other directions
-            # Try moving up
-            # Try moving right
-            # Looking at colPos now
+            # Trying to move left
             if piece.canMoveLeft():
                 distance = 1
                 while True:
@@ -160,6 +165,7 @@ class Grid:
                         distance += 1
                     else:
                         break  # Can't move further, stop trying
+            # Trying to move right
             if piece.canMoveRight():
                 distance = 1
                 while True:
@@ -174,10 +180,11 @@ class Grid:
                         distance += 1
                     else:
                         break  # Can't move further, stop trying
-            # Try moving left
             
         return moves
     
+    # Finding out if the full width of the
+    # Z Block is touching the last column
     def isGoalReached(self):
         for p in self.pieces:
                 if(p.name == "Z"):
@@ -186,8 +193,8 @@ class Grid:
                         return True
         return False
 
+    # To return a string for the current state of the Grid
     def getStateString(self):
-
         board = [[' ' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
         for piece in self.pieces:
             for r in range(piece.height):
@@ -221,6 +228,7 @@ class Grid:
             newGrid.pieces.append(newPiece)
         return newGrid
 
+    # Function to simply apply a move to a piece's row/col position
     def applyMove(self, move):
 
         # Rows, cols, OOB logic is already checked elsewhere from isValidPosition() in generateMoves()
@@ -240,20 +248,16 @@ class Grid:
                 break  # Found and moved the piece, done
         return newGrid  # Return the NEW grid
 
-
+    # Function for displaying a Grid
     def display(self):
         # Create board filled with '.' (not '*')
 
         board = [['.' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
 
-        # Place each piece
-
+        # Place each piece onto the display board if it's within bounds
         for piece in self.pieces:
-
             for r in range(piece.height):
-
                 for c in range(piece.width):
-
                     row = piece.rowPos - 1 + r # Convert to 0-indexed
 
                     col = piece.colPos - 1 + c
@@ -262,18 +266,12 @@ class Grid:
                         board[row][col] = piece.name
 
         # Print with asterisk borders
-
         print('*' * (self.colLimit + 2))
-
         for row in board:
-
             print('*' + ''.join(row) + '*')
-
         print('*' * (self.colLimit + 2))
         return
     
-import queue
-
 class PuzzleState:
     def __init__(self, grid=None, moveList=[]):
         self.grid = grid
@@ -294,21 +292,20 @@ def solvePuzzle(initialGrid):
         my_queue.put(initialState)
         visited.add(initialGrid.getStateString())
 
-        # BFS loop
+        # BFS loop while the queue isn't empty
         while not my_queue.empty():
             currentState = my_queue.get()
 
-            # Generate all possible moves
+            # Generate all the possible moves
             possibleMoves = currentState.grid.generateMoves()
 
             for move in possibleMoves:
 
                 # Apply move to get new grid state
                 newGrid = currentState.grid.applyMove(move)
-                # newGrid.display()
                 stateString = newGrid.getStateString()
 
-                # Skip if we've seen this state before
+                # Skip if we've seen this state before in visited
                 if stateString in visited:
                     continue
 
@@ -318,7 +315,7 @@ def solvePuzzle(initialGrid):
                 if newGrid.isGoalReached():
                     return currentState.moveList + [move]
                 
-                # Add new state to queue
+                # Add new state to queue as a PuzzleState
                 newState = PuzzleState(newGrid, currentState.moveList + [move])
                 my_queue.put(newState)
                     
@@ -370,7 +367,7 @@ def slidingBlock(filename):
                or int(puzzleInput[0]) <= 0 or int(puzzleInput[1]) <= 0):
                 # Handle piece falling outside of grid
                 print("Warning: Piece with starting position of R,C falls outside of grid")
-            elif( myGrid.pieceOverlapping(int(puzzleInput[0]), int(puzzleInput[1])) == True ):
+            elif( myGrid.outdatedisOverlap(int(puzzleInput[0]), int(puzzleInput[1])) == True ):
                 # Piece overlaps with a created piece 
                 print("Warning: Piece with starting position of R,C overlaps with other piece")
             elif( Movement.hasValidMovement(puzzleInput[4]) == False):
@@ -387,7 +384,6 @@ def slidingBlock(filename):
                     nameIter = nameIter + 1
     myGrid.display()
     
-    result = []
     result = solvePuzzle(myGrid)
     if(result == None):
         print("This puzzle has no solution")
@@ -406,11 +402,10 @@ def slidingBlock(filename):
     file.close()
     return
 
-# For autograder to run code
-import sys
 
 def main():
-    slidingBlock("datafiles/proj3g.txt")
+    slidingBlock("datafiles/proj3i.txt")
+    # For autograder to run code
     # if len(sys.argv) > 1:
     #     slidingBlock(sys.argv[1])
     # else:
