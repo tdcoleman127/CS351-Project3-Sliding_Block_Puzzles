@@ -281,6 +281,7 @@ class SolvedPuzzle:
     def __init__(self, grid=None, moveList=[]):
         self.grid = grid
         self.moveList = moveList
+import copy
 
 def solvePuzzle(initialGrid):
 
@@ -307,10 +308,12 @@ def solvePuzzle(initialGrid):
             for move in possibleMoves:
 
                 # Apply move to get new grid state
-                newGrid = currentState.grid.applyMove(move)
+                newGrid = copy.deepcopy(currentState.grid)
+
+                newGrid.applyMove(move)
                 # newGrid.display()
                 stateString = newGrid.getStateString()
-                print(stateString)
+                # print(stateString)
 
                 # Skip if we've seen this state before
                 if stateString in visited:
@@ -320,7 +323,7 @@ def solvePuzzle(initialGrid):
 
                 # Check if goal reached
                 if newGrid.isGoalReached():
-                    finalGrid = currentState.grid
+                    finalGrid = newGrid
                     fullMoveList = currentState.moveList + [move]
                     sp = SolvedPuzzle(finalGrid, fullMoveList)
                     return sp
