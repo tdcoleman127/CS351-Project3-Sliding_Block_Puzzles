@@ -180,9 +180,10 @@ class Grid:
     
     def isGoalReached(self):
         for p in self.pieces:
-            if(p.colPos == self.colLimit):
                 if(p.name == "Z"):
-                    return True
+                    # Check the rightmost edge of the goal block
+                    if p.colPos + p.width - 1 == self.colLimit:
+                        return True
         return False
 
     def getStateString(self):
@@ -199,47 +200,46 @@ class Grid:
                         board[row][col] = piece.name
 
         return ''.join(''.join(m) for m in board)
-        
-        
+    
+    # Custom copy function specifically FOR the Grid and copying its pieces
+    def copy(self):
+        # Create a deep copy of the grid
+        newGrid = Grid()
+        newGrid.rowLimit = self.rowLimit
+        newGrid.colLimit = self.colLimit
+
+        # Deep copy each of the pieces in the grid inidivually
+        for piece in self.pieces:
+            newPiece = Piece()
+            newPiece.name = piece.name
+            newPiece.rowPos = piece.rowPos
+            newPiece.colPos = piece.colPos
+            newPiece.width = piece.width
+            newPiece.height = piece.height
+            newPiece.moves = piece.moves
+            # Append the deep copied piece to the Grid
+            newGrid.pieces.append(newPiece)
+        return newGrid
 
     def applyMove(self, move):
-        newGrid = Grid(self.rowLimit, self.colLimit)
-        newGrid.pieces = self.pieces
 
-        distToMove = move.distance
-        for p in newGrid.pieces:
-            if p.name == move.piece:
-                if(move.direction == "up"):
-                # To apply move up
-                        distToMove = -1 * distToMove
-                        gridRowPos = p.rowPos
-                        calc = gridRowPos + distToMove
-                        if Grid.isValidPosition(self, p, calc, p.colPos) == True:                  
-                            p.rowPos = calc
-                        return newGrid
-                # To apply move down
-                if(move.direction == "down"):
-                        gridRowPos = p.rowPos
-                        calc = gridRowPos + distToMove                    
-                        if Grid.isValidPosition(self, p, calc, p.colPos) == True:                  
-                            p.rowPos = calc
-                        return newGrid
-                # To apply move left
-                if(move.direction == "left"):
-                        distToMove = -1 * distToMove
-                        gridColPos = p.colPos
-                        calc = gridColPos + distToMove
-                        if Grid.isValidPosition(self, p, p.rowPos, calc) == True:                  
-                            p.colPos = calc
-                        return newGrid
-                # To apply move right
-                if(move.direction == "right"):
-                        gridColPos = p.colPos
-                        calc = gridColPos + distToMove
-                        if Grid.isValidPosition(self, p, p.rowPos, calc) == True:                  
-                            p.colPos = calc
-                        return newGrid
-        return newGrid
+        # Rows, cols, OOB logic is already checked elsewhere from isValidPosition() in generateMoves()
+        newGrid = self.copy()
+
+
+        # ONLY apply the move to the specified position here, and then break
+        for piece in newGrid.pieces:
+            if piece.name == move.piece:
+                if move.direction == "up":
+                    piece.rowPos -= move.distance
+                elif move.direction == "down":
+                    piece.rowPos += move.distance
+                elif move.direction == "left":
+                    piece.colPos -= move.distance
+                elif move.direction == "right":
+                    piece.colPos += move.distance
+                break  # Found and moved the piece, done
+        return newGrid  # Return the NEW grid
 
 
     def display(self):
@@ -284,8 +284,6 @@ class SolvedPuzzle:
     def __init__(self, grid=None, moveList=[]):
         self.grid = grid
         self.moveList = moveList
-        
-import copy
 
 def solvePuzzle(initialGrid):
 
@@ -315,7 +313,7 @@ def solvePuzzle(initialGrid):
                 newGrid = currentState.grid.applyMove(move)
                 # newGrid.display()
                 stateString = newGrid.getStateString()
-                # print(stateString)
+                print(stateString)
 
                 # Skip if we've seen this state before
                 if stateString in visited:
@@ -325,7 +323,7 @@ def solvePuzzle(initialGrid):
 
                 # Check if goal reached
                 if newGrid.isGoalReached():
-                    finalGrid = newGrid
+                    finalGrid = currentState.grid
                     fullMoveList = currentState.moveList + [move]
                     sp = SolvedPuzzle(finalGrid, fullMoveList)
                     return sp
