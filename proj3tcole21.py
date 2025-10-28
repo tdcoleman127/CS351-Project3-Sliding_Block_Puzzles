@@ -33,14 +33,17 @@ class Piece:
             canMove = "unspecified"
         return "Piece " + self.name + " at row " + str(self.rowPos) + " and col " + str(self.colPos) + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions"
     
-    def canMoveDown():
-        pass
-    def canMoveUp():
-        pass
-    def canMoveLeft():
-        pass
-    def canMoveRight():
-        pass
+    def canMoveDown(self):
+        return (self.moves == 'v') or (self.moves == 'b')
+    
+    def canMoveUp(self):
+        return (self.moves == 'v') or (self.moves == 'b')
+    
+    def canMoveLeft(self):
+        return (self.moves == 'h') or (self.moves == 'b')
+    
+    def canMoveRight(self):
+        return (self.moves == 'h') or (self.moves == 'b')
 
 
 class Movement:
@@ -49,64 +52,8 @@ class Movement:
         self.direction = direction
         self.distance = distance
 
-    # def movePiece(currentGrid, pieceToMove, direction, distToMove):
-
-    #     for p in currentGrid.pieces:
-
-    #         if pieceToMove == p:
-    #             # For up and down movement
-    #             if(pieceToMove.moves == "b" or pieceToMove.moves == "v"):
-    #                 if(direction == "up"):
-    #                     distToMove = -1 * distToMove
-    #                     gridRowPos = p.rowPos
-    #                     calc = gridRowPos + distToMove                    
-    #                     if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
-    #                         p.rowPos = calc
-    #                         print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) up")
-    #                     return
-    #                 if(direction == "down"):
-    #                     gridRowPos = p.rowPos
-    #                     calc = gridRowPos + distToMove                    
-    #                     if( (calc > 0) and (calc <= currentGrid.rowLimit) ):
-    #                         p.rowPos = calc
-    #                         print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
-    #                     return
-
-    #             if(pieceToMove.moves == "b" or pieceToMove.moves == "h"):
-    #                 if(direction == "left"):
-    #                     distToMove = -1 * distToMove
-    #                     gridColPos = p.colPos
-    #                     calc = gridColPos + distToMove
-    #                     if( (calc > 0) and (calc <= currentGrid.colLimit) ):
-    #                         p.colPos = calc
-    #                         print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) down")
-    #                     return                    
-    #                 if(direction == "right"):
-    #                     gridColPos = p.colPos
-    #                     calc = gridColPos + distToMove
-    #                     # flag = ""
-    #                     # for i in range(p.width):
-    #                     #     print(i)
-    #                     #     if (currentGrid.pieceOverlapping(calc, p.colPos + i) == False) and (i != 0):
-    #                     #         flag = "Overlap"
-    #                     #         print("Overlap occurring")
-    #                     if( (calc > 0) and (calc <= currentGrid.colLimit) ):
-    #                         p.colPos = calc
-    #                         print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
-    #                     return                    
-
-    #     return
-
-
-
     def hasValidMovement(move) -> bool:
         return (move == 'h') or (move == 'v') or (move == 'b') or (move == 'n')
-
-    # # Could rework statement from the local one outside the Movement class
-
-    # Could use Movement class to manage piece movement and change a Grid Piece(),
-    # which then affects what the Grid prints out
-    # Remember: No pieces get removed, only moved to another pos. and replaced with *
 
 class Grid:
     def __init__ (self, rowLimit=0, colLimit=0):
@@ -136,9 +83,9 @@ class Grid:
         # Check if piece stays within grid bounds
         if newRow < 1 or newCol < 1:
             return False
-        if newRow + piece.height - 1 > self.rows:
+        if newRow + piece.height - 1 > self.rowLimit:
             return False
-        if newCol + piece.width - 1 > self.cols:
+        if newCol + piece.width - 1 > self.colLimit:
             return False
         # Check for overlaps with other pieces
         for other in self.pieces:
@@ -174,7 +121,7 @@ class Grid:
                         # Valid move - add to list
                         move = Movement()
                         move.piece = piece.name
-                        move.direction = 'd'
+                        move.direction = "down"
                         move.distance = distance
                         moves.append(move)
                         distance += 1
@@ -182,16 +129,118 @@ class Grid:
                         break  # Can't move further, stop trying
                     
             # ... same for other directions
+            # Try moving up
+            if piece.canMoveUp():
+                distance = 1
+                while True:
+                    newRow = piece.rowPos - distance
+                    if self.isValidPosition(piece, newRow, piece.colPos):
+                        # Valid move - add to list
+                        move = Movement()
+                        move.piece = piece.name
+                        move.direction = "up"
+                        move.distance = distance
+                        moves.append(move)
+                        distance += 1
+                    else:
+                        break  # Can't move further, stop trying
+            # Try moving right
+            # Looking at colPos now
+            if piece.canMoveRight():
+                distance = 1
+                while True:
+                    newCol = piece.colPos + distance
+                    if self.isValidPosition(piece, piece.rowPos, newCol):
+                        # Valid move - add to list
+                        move = Movement()
+                        move.piece = piece.name
+                        move.direction = "right"
+                        move.distance = distance
+                        moves.append(move)
+                        distance += 1
+                    else:
+                        break  # Can't move further, stop trying
+            # Try moving left
+            if piece.canMoveLeft():
+                distance = 1
+                while True:
+                    newCol = piece.colPos - distance
+                    if self.isValidPosition(piece, piece.rowPos, newCol):
+                        # Valid move - add to list
+                        move = Movement()
+                        move.piece = piece.name
+                        move.direction = "left"
+                        move.distance = distance
+                        moves.append(move)
+                        distance += 1
+                    else:
+                        break  # Can't move further, stop trying
+            
         return moves
     
-    def isGoalReached():
-        pass
+    def isGoalReached(self):
+        for p in self.pieces:
+            if(p.name == 'Z' and p.colPos == self.colLimit):
+                return True
+        return False
 
-    def getStateString():
-        pass
+    def getStateString(self):
 
-    def applyMove(move):
-        pass
+        board = [['.' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
+
+        for piece in self.pieces:
+
+            for r in range(piece.height):
+
+                for c in range(piece.width):
+
+                    row = piece.rowPos - 1 + r # Convert to 0-indexed
+
+                    col = piece.colPos - 1 + c
+
+                    board[row][col] = piece.name
+
+        lineString = ""
+        for m in board:
+            lineString += ''.join(m)
+        lineString = lineString.replace(".", ' ')
+        return lineString
+        
+
+    def applyMove(self, move):
+        distToMove = move.distance
+        for p in self.pieces:
+            if(move.direction == "up"):
+            # To apply move up
+                    distToMove = -1 * distToMove
+                    gridRowPos = p.rowPos
+                    calc = gridRowPos + distToMove                    
+                    p.rowPos = calc
+                    print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) up")
+        
+            # To apply move down
+            if(move.direction == "down"):
+                    gridRowPos = p.rowPos
+                    calc = gridRowPos + distToMove                    
+                    p.rowPos = calc
+                    print("Piece " + p.name + " moves " + str(distToMove) + " space(s) down")
+
+            # To apply move left
+            if(move.direction == "left"):
+                    distToMove = -1 * distToMove
+                    gridColPos = p.colPos
+                    calc = gridColPos + distToMove
+                    p.colPos = calc
+                    print("Piece " + p.name + " moves " + str(-1 * distToMove) + " space(s) left")
+                 
+            # To apply move right
+            if(move.direction == "right"):
+                    gridColPos = p.colPos
+                    calc = gridColPos + distToMove
+                    p.colPos = calc
+                    print("Piece " + p.name + " moves " + str(distToMove) + " space(s) right")
+
+        return
 
 
     def display(self):
@@ -227,11 +276,10 @@ class Grid:
 import queue
 
 class PuzzleState:
-    def __init__(self):
-        self.grid = ""
-        self.moveList = []
+    def __init__(self, grid=None, moveList=[]):
+        self.grid = grid
+        self.moveList = moveList
     
-class PuzzleSolving:
     def solvePuzzle(initialGrid):
         # puzzle.returnSolvedGrid()
         # puzzle.returnAllPossibleSequences()
@@ -259,6 +307,8 @@ class PuzzleSolving:
             for move in possibleMoves:
 
                 # Apply move to get new grid state
+                stateString = ""
+                newGrid = Grid()
                 newGrid = currentState.grid.applyMove(move)
                 stateString = newGrid.getStateString()
 
@@ -340,31 +390,21 @@ def slidingBlock(filename):
                     myGrid.pieces.append(myPiece)
                     nameIter = nameIter + 1
 
-    # print("Before movement")
-    print(myGrid.display())
-
-    # Insert BFS Logic here after input from file to grid is fully tested
-    # pieceA = myGrid.pieces[4]
-    # pieceB = myGrid.pieces[3]
-    # movingPieceA = Movement(pieceA, pieceA.moves, 3)
-    # movingPieceA.movePiece()
-    # Movement.movePiece(myGrid, pieceA, "up", 1)
-    # Movement.movePiece(myGrid, pieceB, "right", 3)
-
-    # print("After movement")
     # print(myGrid.display())
-
-    # Notes from Friday (10/24) Meeting with TA Flameflake
-    # Create a class to search function that uses BFS
-    # Could break when you find a puzzle with no solution
-    # Text TA< can I use memory constraint for assignment to tell when there's no solution for a puzzle (psutil)
-    #     Capping the memory somehow
-    # Ask the autograder about teh psytil libary
-    # "Cases of really long and really large memory go together"
-    # psutil.Process - start process
-    # process.memory_info().rss - to get the memory after each iteration, "If the memory is larger than one GB, force a break into the loop"
-
-
+    # print(myGrid.getStateString())
+    
+    result = []
+    result = PuzzleState.solvePuzzle(myGrid)
+    if(result == None):
+        print("This puzzle has no solution")
+    else:
+        # Take apart result
+        # Get number of steps needed to solve puzzle
+        count = 0
+        for m in result:
+            count += 1
+            print(count + ". Piece " + m.piece.name + " moves " + m.distance + " space(s) " + m.direction)
+        print("This puzzle is solvable in " +  count + " moves")
     file.close()
     return
 
@@ -375,7 +415,6 @@ def main():
     if len(sys.argv) > 1:
 
         slidingBlock(sys.argv[1])
-        print("This puzzle is solvable in 5 moves")
 
     else:
 
