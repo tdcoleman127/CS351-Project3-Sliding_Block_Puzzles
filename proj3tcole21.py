@@ -113,6 +113,20 @@ class Grid:
         moves = []
         for piece in self.pieces:
             # Try moving down
+            if piece.canMoveUp():
+                distance = 1
+                while True:
+                    newRow = piece.rowPos - distance
+                    if self.isValidPosition(piece, newRow, piece.colPos):
+                        # Valid move - add to list
+                        move = Movement()
+                        move.piece = piece.name
+                        move.direction = "up"
+                        move.distance = distance
+                        moves.append(move)
+                        distance += 1
+                    else:
+                        break  # Can't move further, stop trying
             if piece.canMoveDown():
                 distance = 1
                 while True:
@@ -130,22 +144,22 @@ class Grid:
                     
             # ... same for other directions
             # Try moving up
-            if piece.canMoveUp():
+            # Try moving right
+            # Looking at colPos now
+            if piece.canMoveLeft():
                 distance = 1
                 while True:
-                    newRow = piece.rowPos - distance
-                    if self.isValidPosition(piece, newRow, piece.colPos):
+                    newCol = piece.colPos - distance
+                    if self.isValidPosition(piece, piece.rowPos, newCol):
                         # Valid move - add to list
                         move = Movement()
                         move.piece = piece.name
-                        move.direction = "up"
+                        move.direction = "left"
                         move.distance = distance
                         moves.append(move)
                         distance += 1
                     else:
                         break  # Can't move further, stop trying
-            # Try moving right
-            # Looking at colPos now
             if piece.canMoveRight():
                 distance = 1
                 while True:
@@ -161,20 +175,6 @@ class Grid:
                     else:
                         break  # Can't move further, stop trying
             # Try moving left
-            if piece.canMoveLeft():
-                distance = 1
-                while True:
-                    newCol = piece.colPos - distance
-                    if self.isValidPosition(piece, piece.rowPos, newCol):
-                        # Valid move - add to list
-                        move = Movement()
-                        move.piece = piece.name
-                        move.direction = "left"
-                        move.distance = distance
-                        moves.append(move)
-                        distance += 1
-                    else:
-                        break  # Can't move further, stop trying
             
         return moves
     
@@ -225,7 +225,6 @@ class Grid:
 
         # Rows, cols, OOB logic is already checked elsewhere from isValidPosition() in generateMoves()
         newGrid = self.copy()
-
 
         # ONLY apply the move to the specified position here, and then break
         for piece in newGrid.pieces:
@@ -280,11 +279,6 @@ class PuzzleState:
         self.grid = grid
         self.moveList = moveList
 
-class SolvedPuzzle:
-    def __init__(self, grid=None, moveList=[]):
-        self.grid = grid
-        self.moveList = moveList
-
 def solvePuzzle(initialGrid):
 
         # Check if already at goal
@@ -313,7 +307,6 @@ def solvePuzzle(initialGrid):
                 newGrid = currentState.grid.applyMove(move)
                 # newGrid.display()
                 stateString = newGrid.getStateString()
-                print(stateString)
 
                 # Skip if we've seen this state before
                 if stateString in visited:
@@ -323,10 +316,7 @@ def solvePuzzle(initialGrid):
 
                 # Check if goal reached
                 if newGrid.isGoalReached():
-                    finalGrid = currentState.grid
-                    fullMoveList = currentState.moveList + [move]
-                    sp = SolvedPuzzle(finalGrid, fullMoveList)
-                    return sp
+                    return currentState.moveList + [move]
                 
                 # Add new state to queue
                 newState = PuzzleState(newGrid, currentState.moveList + [move])
@@ -404,13 +394,14 @@ def slidingBlock(filename):
     else:
         # Take apart result
         # Get number of steps needed to solve puzzle
-        count = 0
-        for m in result.moveList:
-            count += 1
-            print(str(count) + ". Piece " + m.piece + " moves " + str(m.distance) + " space(s) " + m.direction)
-        print("This puzzle is solvable in " +  str(count) + " moves")
-        result.grid.display()
+        print("This puzzle is solvable in " +  str(len(result)) + " moves")
+        for i, m in enumerate(result, 1):
+            print(str(i) + ". Piece " + m.piece + " moves " + str(m.distance) + " space(s) " + m.direction)
         
+        finalGrid = myGrid
+        for m in result:
+            finalGrid = finalGrid.applyMove(m)
+        finalGrid.display()
 
     file.close()
     return
@@ -419,7 +410,7 @@ def slidingBlock(filename):
 import sys
 
 def main():
-    slidingBlock("datafiles/proj3a.txt")
+    slidingBlock("datafiles/proj3g.txt")
     # if len(sys.argv) > 1:
     #     slidingBlock(sys.argv[1])
     # else:
