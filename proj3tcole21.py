@@ -205,34 +205,37 @@ class Grid:
     def applyMove(self, move):
         distToMove = move.distance
         for p in self.pieces:
-            if(move.direction == "up"):
-            # To apply move up
-                    distToMove = -1 * distToMove
-                    gridRowPos = p.rowPos
-                    calc = gridRowPos + distToMove                    
-                    p.rowPos = calc
-                    return self
-            # To apply move down
-            if(move.direction == "down"):
-                    gridRowPos = p.rowPos
-                    calc = gridRowPos + distToMove                    
-                    p.rowPos = calc
-                    return self
-            # To apply move left
-            if(move.direction == "left"):
-                    distToMove = -1 * distToMove
-                    gridColPos = p.colPos
-                    calc = gridColPos + distToMove
-                    p.colPos = calc
-                    return self
-            # To apply move right
-            if(move.direction == "right"):
-                    gridColPos = p.colPos
-                    calc = gridColPos + distToMove
-                    p.colPos = calc
-                    return self
-            print("Displaying self")
-            self.display()
+            if p.name == move.piece:
+                if(move.direction == "up"):
+                # To apply move up
+                        distToMove = -1 * distToMove
+                        gridRowPos = p.rowPos
+                        calc = gridRowPos + distToMove
+                        if Grid.isValidPosition(self, p, calc, p.colPos) == True:                  
+                            p.rowPos = calc
+                        return self
+                # To apply move down
+                if(move.direction == "down"):
+                        gridRowPos = p.rowPos
+                        calc = gridRowPos + distToMove                    
+                        if Grid.isValidPosition(self, p, calc, p.colPos) == True:                  
+                            p.rowPos = calc
+                        return self
+                # To apply move left
+                if(move.direction == "left"):
+                        distToMove = -1 * distToMove
+                        gridColPos = p.colPos
+                        calc = gridColPos + distToMove
+                        if Grid.isValidPosition(self, p, p.rowPos, calc) == True:                  
+                            p.colPos = calc
+                        return self
+                # To apply move right
+                if(move.direction == "right"):
+                        gridColPos = p.colPos
+                        calc = gridColPos + distToMove
+                        if Grid.isValidPosition(self, p, p.rowPos, calc) == True:                  
+                            p.colPos = calc
+                        return self
         return self
 
 
@@ -305,7 +308,9 @@ def solvePuzzle(initialGrid):
 
                 # Apply move to get new grid state
                 newGrid = currentState.grid.applyMove(move)
+                # newGrid.display()
                 stateString = newGrid.getStateString()
+                print(stateString)
 
                 # Skip if we've seen this state before
                 if stateString in visited:
@@ -411,11 +416,11 @@ def slidingBlock(filename):
 import sys
 
 def main():
-    # slidingBlock("datafiles/proj3b.txt")
-    if len(sys.argv) > 1:
-        slidingBlock(sys.argv[1])
-    else:
-        print("Usage: python3 proj3netid.py <input_file>")
+    slidingBlock("datafiles/proj3a.txt")
+    # if len(sys.argv) > 1:
+    #     slidingBlock(sys.argv[1])
+    # else:
+    #     print("Usage: python3 proj3netid.py <input_file>")
 
 if __name__ == "__main__":
     main()
