@@ -404,12 +404,13 @@ def slidingBlock(filename):
 
 
 def main():
-    slidingBlock("datafiles/proj3i.txt")
+    # slidingBlock("datafiles/proj3i.txt")
+    
     # For autograder to run code
-    # if len(sys.argv) > 1:
-    #     slidingBlock(sys.argv[1])
-    # else:
-    #     print("Usage: python3 proj3netid.py <input_file>")
+    if len(sys.argv) > 1:
+        slidingBlock(sys.argv[1])
+    else:
+        print("Usage: python3 proj3netid.py <input_file>")
 
 if __name__ == "__main__":
     main()
