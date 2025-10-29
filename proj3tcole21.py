@@ -35,7 +35,7 @@ class Piece:
             canMove = "unspecified"
         return "Piece " + self.name + " at row " + str(self.rowPos) + " and col " + str(self.colPos) + " with width " + str(self.width) + " and height " + str(self.height) + " can move in " + canMove + " directions"
     
-    # Functions for checking movement in different directions
+    # Functions for checking movement in different directions - supported by TA
     def canMoveDown(self):
         return (self.moves == 'v') or (self.moves == 'b')
     
@@ -83,7 +83,7 @@ class Grid:
                 return True
         return False
     
-    # New function to replace outdatedisOverlap(), checks if a new position
+    # New function to replace outdatedisOverlap(), checks if a new position - supported by TA
     # to place a piece is valid or not
     def isValidPosition(self, piece, newRow, newCol):
         # Check if piece stays within grid bounds
@@ -115,7 +115,7 @@ class Grid:
             
         return True
 
-    # Generates and returns a list of possible moves
+    # Generates and returns a list of possible moves - supported by TA
     # based on Grid pieces
     def generateMoves(self):
         moves = []
@@ -184,7 +184,7 @@ class Grid:
         return moves
     
     # Finding out if the full width of the
-    # Z Block is touching the last column
+    # Z Block is touching the last column - supported by TA
     def isGoalReached(self):
         for p in self.pieces:
                 if(p.name == "Z"):
@@ -193,7 +193,7 @@ class Grid:
                         return True
         return False
 
-    # To return a string for the current state of the Grid
+    # To return a string for the current state of the Grid - supported by TA
     def getStateString(self):
         board = [[' ' for _ in range(self.colLimit)] for _ in range(self.rowLimit)]
         for piece in self.pieces:
@@ -208,7 +208,7 @@ class Grid:
 
         return ''.join(''.join(m) for m in board)
     
-    # Custom copy function specifically FOR the Grid and copying its pieces
+    # Custom copy function specifically FOR the Grid and copying its pieces - supported by TA
     def copy(self):
         # Create a deep copy of the grid
         newGrid = Grid()
@@ -228,7 +228,7 @@ class Grid:
             newGrid.pieces.append(newPiece)
         return newGrid
 
-    # Function to simply apply a move to a piece's row/col position
+    # Function to simply apply a move to a piece's row/col position - supported by TA
     def applyMove(self, move):
 
         # Rows, cols, OOB logic is already checked elsewhere from isValidPosition() in generateMoves()
@@ -248,7 +248,7 @@ class Grid:
                 break  # Found and moved the piece, done
         return newGrid  # Return the NEW grid
 
-    # Function for displaying a Grid
+    # Function for displaying a Grid - supported by TA
     def display(self):
         # Create board filled with '.' (not '*')
 
@@ -277,6 +277,7 @@ class PuzzleState:
         self.grid = grid
         self.moveList = moveList
 
+# Function to solve puzzle - supported by TA
 def solvePuzzle(initialGrid):
 
         # Check if already at goal
@@ -383,8 +384,9 @@ def slidingBlock(filename):
                     myGrid.pieces.append(myPiece)
                     nameIter = nameIter + 1
     myGrid.display()
-    
     result = solvePuzzle(myGrid)
+    # Revised section for proper output formatting and keeping track of moves and distance
+    # - supported by TA
     if(result == None):
         print("This puzzle has no solution")
     else:
@@ -393,25 +395,20 @@ def slidingBlock(filename):
         print("This puzzle is solvable in " +  str(len(result)) + " moves")
         for i, m in enumerate(result, 1):
             print(str(i) + ". Piece " + m.piece + " moves " + str(m.distance) + " space(s) " + m.direction)
-        
-        finalGrid = myGrid
         for m in result:
-            finalGrid = finalGrid.applyMove(m)
-        finalGrid.display()
-
+            myGrid = myGrid.applyMove(m)
+        myGrid.display()
     file.close()
     return
 
 
 def main():
-    # slidingBlock("datafiles/proj3i.txt")
-    
+    slidingBlock("datafiles/proj3i.txt")
     # For autograder to run code
-    if len(sys.argv) > 1:
-        slidingBlock(sys.argv[1])
-    else:
-        print("Usage: python3 proj3netid.py <input_file>")
-
+    # if len(sys.argv) > 1:
+    #     slidingBlock(sys.argv[1])
+    # else:
+    #     print("Usage: python3 proj3netid.py <input_file>")
 if __name__ == "__main__":
     main()
 
